@@ -1,0 +1,10 @@
+
+*.props
+*.tlog
+*.ipch
+*.log
+*.obj
+build
+.vs/Finanzrechner/v16/Browse.VC.opendb
+.vs/Finanzrechner/v16/Browse.VC.db
+.vs/Finanzrechner/v16/.suo
