@@ -17,6 +17,7 @@ private:
 	QDate m_date;
 
 	//FUNCTIONS
+public:
 	//constructors
 	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date);
 	transaction(const QJsonObject& json);

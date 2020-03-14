@@ -27,6 +27,7 @@ class month {
 	transaction& modifyTransaction(const QString& id);
 	//helper functions
 	QString generateID(const QDate& date, const bool& type1, const bool& type2);
+	static QString getFileName(const QDate& i_month);
 };
 
 struct numberString {
