@@ -111,6 +111,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="data\month.cpp" />
+    <ClCompile Include="data\month_datamanipulation.cpp" />
+    <ClCompile Include="data\month_json.cpp" />
     <ClCompile Include="data\transaction.cpp" />
     <ClCompile Include="finanzrechner.cpp" />
     <ClCompile Include="main.cpp" />
@@ -120,6 +122,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dataFunctions\functions.h" />
     <ClInclude Include="data\month.h" />
     <ClInclude Include="data\transaction.h" />
     <ClInclude Include="month\month.h" />
