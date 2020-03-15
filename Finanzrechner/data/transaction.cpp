@@ -36,6 +36,6 @@ QJsonObject* transaction::toJSON() const {
 	(*json)["type"] = m_type;
 	(*json)["amount"] = m_amount;
 	(*json)["category"] = m_category;
-	(*json)["date"] = m_date.toString();
+	(*json)["date"] = m_date.toString("dd-MM-yyyy");
 	return json;
 }

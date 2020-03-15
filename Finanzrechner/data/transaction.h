@@ -14,6 +14,7 @@ private:
 	double m_category;
 	double m_amount;
 	QDate m_date;
+	
 public:
 	QString m_transID;
 	

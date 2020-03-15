@@ -46,6 +46,12 @@
     <ClCompile Include="data\month_datamanipulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dataFunctions\m_container.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="settings\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -60,7 +66,10 @@
     <ClInclude Include="data\month.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dataFunctions\functions.h">
+    <ClInclude Include="dataFunctions\m_container.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="settings\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

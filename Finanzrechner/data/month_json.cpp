@@ -2,11 +2,11 @@
 #include "month.h"
 
 QString month::getFileName(const QDate& i_month) {
-	return i_month.toString("MM.yyyy") + ".json";
+	return i_month.toString("MM-yyyy") + ".json";
 }
 
 bool month::writeJSON() {
-	QFile saveFile(getFileName(m_month));
+	QFile saveFile("C:\\Users\\Admin\\Desktop\\test.json");
 
 	if (!saveFile.open(QIODevice::WriteOnly)) {
 		qWarning("Couldn't open save file.");
@@ -15,23 +15,28 @@ bool month::writeJSON() {
 
 	QJsonArray transactions;
 	for (transaction* t : m_transactions) {
-		transactions.push_back(t->toJSON());
+		QJsonObject tobj = *t->toJSON();
+		transactions.append(tobj);
 		delete t;
-	}
+	} m_transactions.clear();
+	
 	QJsonArray budget;
 	for (transaction* t : m_budget) {
-		budget.push_back(t->toJSON());
+		QJsonObject tobj = *t->toJSON();
+		budget.append(tobj);
 		delete t;
-	}
+	} m_budget.clear();
 
 	QJsonObject month;
+	month["date"] = m_month.toString("MM-yyyy");
+	month["idCounter"] = m_idCounter;
 	month["transactions"] = transactions;
 	month["budget"] = budget;
-	month["date"] = m_month.toString("MM.yyyy");
 
 	QJsonDocument saveDoc(month);
-	saveFile.write(saveDoc.toJson());
+	saveFile.write(saveDoc.toJson(QJsonDocument::Indented));
 
+	saveFile.close();
 	return true;
 }
 
@@ -51,7 +56,7 @@ bool month::readJSON() {
 		QJsonArray budgetArray = json["budget"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_budget.push_back(new transaction(e.toObject()));
+				m_budget.append(new transaction(e.toObject()));
 	}
 	else {
 		qWarning("Did not find budget listing, possible corrupt file.");
@@ -62,10 +67,18 @@ bool month::readJSON() {
 		QJsonArray transactionArray = json["transactions"].toArray();
 		for (auto e : transactionArray)
 			if (e.isObject())
-				m_transactions.push_back(new transaction(e.toObject()));
+				m_transactions.append(new transaction(e.toObject()));
 	}
 	else {
 		qWarning("Did not find transactions listing, possible corrupt file.");
+		return false;
+	}
+
+	if (json.contains("idCounter") && json["idCounter"].isDouble()) {
+		m_idCounter = json["idCounter"].toDouble();
+	}
+	else {
+		qWarning("Did not find id listing, possible corrupt file.");
 		return false;
 	}
 
