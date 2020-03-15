@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "transaction.h"
 
-transaction::transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date) {
-	m_transID = transID;  m_type = type; m_category = category; m_amount = amount; m_date = date;
+transaction::transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date, const QString& description) {
+	m_transID = transID;  m_type = type; m_category = category; m_amount = amount; m_date = date; m_description = description;
 }
 
 transaction::transaction(const QJsonObject& json) {
@@ -12,7 +12,7 @@ transaction::transaction(const QJsonObject& json) {
 }
 
 transaction* transaction::fromJSON(const QJsonObject& json) const{
-	bool type = false; bool recurring = false; QString transID; double category = 0; double amount = 0; QDate date;
+	bool type = false; bool recurring = false; QString transID; QString description; double category = 0; double amount = 0; QDate date;
 	
 	if (json.contains("type") && json["type"].isBool())
 		type = json["type"].toBool();
@@ -26,8 +26,10 @@ transaction* transaction::fromJSON(const QJsonObject& json) const{
 		transID = json["id"].toString();
 	if (json.contains("date") && json["date"].isString())
 		date = QDate::fromString(json["date"].toString());
+	if (json.contains("description") && json["description"].isString())
+		description = json["description"].toString();
 	
-	return new transaction(type, transID, category, amount, date);
+	return new transaction(type, transID, category, amount, date, description);
 }
 
 QJsonObject* transaction::toJSON() const {
@@ -37,5 +39,6 @@ QJsonObject* transaction::toJSON() const {
 	(*json)["amount"] = m_amount;
 	(*json)["category"] = m_category;
 	(*json)["date"] = m_date.toString("dd-MM-yyyy");
+	(*json)["description"] = m_description;
 	return json;
 }

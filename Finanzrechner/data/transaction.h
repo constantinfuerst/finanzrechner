@@ -10,17 +10,17 @@ public:
 private:
 	//DATA
 	bool m_type;
-	bool m_recurring;
 	double m_category;
 	double m_amount;
 	QDate m_date;
+	QString m_description;
 	
 public:
 	QString m_transID;
 	
 	//FUNCTIONS
 	//constructors
-	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date = QDate(0,0,0));
+	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date = QDate(0,0,0), const QString& description = "");
 	transaction(const QJsonObject& json);
 
 	//json serializers / deserializers

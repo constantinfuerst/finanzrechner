@@ -12,10 +12,8 @@ int qtstart(int argc, char* argv[]) {
 	return a.exec();
 }
 
-int main(int argc, char *argv[]) {
-	month_container mc;
-	
-	auto* new_month = mc.getMonth({2020, 3, 1});
+void createMonth(month_container& mc) {
+	auto* new_month = mc.getMonth({ 2020, 3, 1 });
 
 	new_month->addTransaction(transaction::INCOME, 2, 100, { 2020, 3, 9 });
 	new_month->addTransaction(transaction::EXPENSE, 5, 1000, { 2020, 3, 5 });
@@ -24,11 +22,18 @@ int main(int argc, char *argv[]) {
 
 	new_month->addBudget(10, 100);
 	new_month->addBudget(41, 199);
-	
-	return true;
 }
 
-//TODO: Add data functions (create month etc.)
+int main(int argc, char *argv[]) {
+	month_container mc;
+	
+	createMonth(mc);
+	
+	return qtstart(argc, argv);
+}
+
+//TODO: Add settings storing savings, categories, monthly income and budget information
+//TODO: Add evaluating functions (earnings or losses for a month)
 //TODO: Add scripting support via qjs for functions like "calculate savings" etc
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions

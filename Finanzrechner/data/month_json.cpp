@@ -2,11 +2,11 @@
 #include "month.h"
 
 QString month::getFileName(const QDate& i_month) {
-	return i_month.toString("MM-yyyy") + ".json";
+	return savedir + QString("\\data\\") + i_month.toString("MM-yyyy") + ".json";
 }
 
 bool month::writeJSON() {
-	QFile saveFile("C:\\Users\\Admin\\Desktop\\test.json");
+	QFile saveFile(getFileName(m_month));
 
 	if (!saveFile.open(QIODevice::WriteOnly)) {
 		qWarning("Couldn't open save file.");
@@ -34,7 +34,7 @@ bool month::writeJSON() {
 	month["budget"] = budget;
 
 	QJsonDocument saveDoc(month);
-	saveFile.write(saveDoc.toJson(QJsonDocument::Indented));
+	saveFile.write(saveDoc.toJson(QJsonDocument::Compact));
 
 	saveFile.close();
 	return true;
