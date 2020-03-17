@@ -1,14 +1,14 @@
 #include "stdafx.h"
 #include "month.h"
 
-void month::addBudget(const double& category, const double& amount) {
+void month::addBudget(const double& category, const double& amount, const QString& description) {
 	modified = true;
-	m_budget.append(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount));
+	m_budget.append(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
 }
 
-void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date){
+void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description){
 	modified = true;
-	m_transactions.append(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, date));
+	m_transactions.append(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
 }
 
 bool month::removeTransaction(const QString& id) {

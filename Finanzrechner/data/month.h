@@ -16,11 +16,11 @@ public:
 	static const bool BUDGET = false;
 	static const bool TRANSACTION = true;
 
-private:
 	//DATA
-	QDate m_month;
 	QVector<transaction*> m_transactions;
 	QVector<transaction*> m_budget;
+private:
+	QDate m_month;
 	bool modified = false;
 	double m_idCounter = 0;
 	
@@ -39,8 +39,8 @@ public:
 	bool writeJSON();
 	
 	//data manipulation
-	void addBudget(const double& category, const double& amount);
-	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date);
+	void addBudget(const double& category, const double& amount, const QString& description);
+	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description);
 	bool removeTransaction(const QString& id);
 	transaction* modifyTransaction(const QString& id);
 

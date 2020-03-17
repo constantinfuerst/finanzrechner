@@ -7,11 +7,11 @@ public:
 	static const bool EXPENSE = false;
 	static const bool INCOME = true;
 
-private:
 	//DATA
+	double m_amount;
+private:
 	bool m_type;
 	double m_category;
-	double m_amount;
 	QDate m_date;
 	QString m_description;
 	
@@ -29,4 +29,5 @@ public:
 
 	//comparisons
 	bool operator==(const QString& id) const;
+	bool operator==(const double& cat) const;
 };

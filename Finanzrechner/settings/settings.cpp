@@ -17,8 +17,7 @@ bool settings::addMonthly(const double& amount, const QString& description, cons
 }
 
 bool settings::removeMonthly(const QString& id) {
-	switch (id[0]) {
-	case '0':
+	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
 			auto* b = m_budget[i];
 			if (*b == id) {
@@ -26,8 +25,8 @@ bool settings::removeMonthly(const QString& id) {
 				m_budget.erase(m_budget.begin() + i);
 				return true;
 			}
-		} break;
-	case '1':
+		}
+	else if (id[0] == '1')
 		for (auto i = 0; i < m_recurring.size(); i++) {
 			auto* b = m_recurring[i];
 			if (*b == id) {
@@ -35,8 +34,8 @@ bool settings::removeMonthly(const QString& id) {
 				m_recurring.erase(m_recurring.begin() + i);
 				return true;
 			}
-		} break;
-	case '2':
+		}
+	else if (id[0] == '2')
 		for (auto i = 0; i < m_income.size(); i++) {
 			auto* b = m_income[i];
 			if (*b == id) {
@@ -44,31 +43,31 @@ bool settings::removeMonthly(const QString& id) {
 				m_income.erase(m_income.begin() + i);
 				return true;
 			}
-		} break;
-	default: break;
-	}
+		}
+	else
+		return false;
 	return false;
 }
 
 transaction* settings::editMonthly(const QString& id) {
-	switch (id[0]) {
-	case '0':
+	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
 			auto* b = m_budget[i];
 			if (*b == id) return b;
-		} break;
-	case '1':
+		}
+
+	else if (id[0] == '1')
 		for (auto i = 0; i < m_recurring.size(); i++) {
 			auto* b = m_recurring[i];
 			if (*b == id) return b;
-		} break;
-	case '2':
+		}
+	else if (id[0] == '2')
 		for (auto i = 0; i < m_income.size(); i++) {
 			auto* b = m_income[i];
 			if (*b == id) return b;
-		} break;
-	default: break;
-	}
+		}
+	else
+		return nullptr;
 	return nullptr;
 }
 
@@ -231,10 +230,22 @@ bool settings::readJSON() {
 
 	if (json.contains("idCounter") && json["idCounter"].isDouble())
 		m_idCounter = json["idCounter"].toDouble();
+	else {
+		qWarning("Did not find recurring listing, possible corrupt settings file.");
+		return false;
+	}
 	if (json.contains("current_balance") && json["current_balance"].isDouble())
 		m_current_balance = json["current_balance"].toDouble();
+	else {
+		qWarning("Did not find recurring listing, possible corrupt settings file.");
+		return false;
+	}
 	if (json.contains("catCounter") && json["catCounter"].isDouble())
 		m_catCounter = json["catCounter"].toDouble();
+	else {
+		qWarning("Did not find recurring listing, possible corrupt settings file.");
+		return false;
+	}
 	
 	return true;
 }

@@ -48,3 +48,9 @@ bool transaction::operator==(const QString& id) const {
 		return true;
 	return false;
 }
+
+bool transaction::operator==(const double& cat) const {
+	if (cat == m_category)
+		return true;
+	return false;
+}
