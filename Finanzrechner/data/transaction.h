@@ -20,10 +20,13 @@ public:
 	
 	//FUNCTIONS
 	//constructors
-	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date = QDate(0,0,0), const QString& description = "");
+	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QString& description = "", const QDate& date = QDate(0,0,0));
 	transaction(const QJsonObject& json);
 
 	//json serializers / deserializers
 	transaction* fromJSON(const QJsonObject& json) const;
 	QJsonObject* toJSON() const;
+
+	//comparisons
+	bool operator==(const QString& id) const;
 };

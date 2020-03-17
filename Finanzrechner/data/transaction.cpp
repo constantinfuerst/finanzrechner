@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "transaction.h"
 
-transaction::transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QDate& date, const QString& description) {
+transaction::transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QString& description, const QDate& date) {
 	m_transID = transID;  m_type = type; m_category = category; m_amount = amount; m_date = date; m_description = description;
 }
 
 transaction::transaction(const QJsonObject& json) {
 	auto* t = fromJSON(json);
-	m_type = t->m_type; m_recurring = t->m_recurring; m_transID = t->m_transID;  m_category = t->m_category; m_amount = t->m_amount; m_date = t->m_date;
+	m_type = t->m_type; m_transID = t->m_transID;  m_category = t->m_category; m_amount = t->m_amount; m_date = t->m_date;
 	delete t;
 }
 
@@ -29,7 +29,7 @@ transaction* transaction::fromJSON(const QJsonObject& json) const{
 	if (json.contains("description") && json["description"].isString())
 		description = json["description"].toString();
 	
-	return new transaction(type, transID, category, amount, date, description);
+	return new transaction(type, transID, category, amount, description, date);
 }
 
 QJsonObject* transaction::toJSON() const {
@@ -41,4 +41,10 @@ QJsonObject* transaction::toJSON() const {
 	(*json)["date"] = m_date.toString("dd-MM-yyyy");
 	(*json)["description"] = m_description;
 	return json;
+}
+
+bool transaction::operator==(const QString& id) const {
+	if (id == m_transID)
+		return true;
+	return false;
 }

@@ -32,9 +32,10 @@ int main(int argc, char *argv[]) {
 	return qtstart(argc, argv);
 }
 
-//TODO: Add settings storing savings, categories, monthly income and budget information
-//TODO: Add evaluating functions (earnings or losses for a month)
-//TODO: Add scripting support via qjs for functions like "calculate savings" etc
+//WORKING ON: TODO: Add settings storing savings, categories, monthly income and budget information
+//
+//TODO: Add evaluating functions (earnings or losses for a month and so on)
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions
+//TODO: Create scriptable evaluation functions
