@@ -2,6 +2,7 @@
 #include "settings.h"
 
 bool settings::addMonthly(const double& amount, const QString& description, const int& category, const monthly_type& type) {
+	modified = true;
 	switch (type) {
 	case budget:
 		m_budget.append(new transaction(transaction::EXPENSE, generateID(type, category), category, amount, description));
@@ -17,6 +18,7 @@ bool settings::addMonthly(const double& amount, const QString& description, cons
 }
 
 bool settings::removeMonthly(const QString& id) {
+	modified = true;
 	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
 			auto* b = m_budget[i];
@@ -50,6 +52,7 @@ bool settings::removeMonthly(const QString& id) {
 }
 
 transaction* settings::editMonthly(const QString& id) {
+	modified = true;
 	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
 			auto* b = m_budget[i];
@@ -69,6 +72,15 @@ transaction* settings::editMonthly(const QString& id) {
 	else
 		return nullptr;
 	return nullptr;
+}
+
+void settings::fillMonth(month* m) {
+	for (auto* r : m_recurring)
+		m->addTransaction(r);
+	for (auto* b : m_budget)
+		m->addBudget(b);
+	for (auto* i : m_income)
+		m->addTransaction(i);
 }
 
 QString settings::generateID(const monthly_type& type, const int& category) {
@@ -97,15 +109,27 @@ settings::settings() {
 }
 
 settings::~settings() {
-	writeJSON();
+	if (modified)
+		writeJSON();
+	for (auto* e : m_categories)
+		delete e;
+	for (auto* e : m_income)
+		delete e;
+	for (auto* e : m_budget)
+		delete e;
+	for (auto* e : m_recurring)
+		delete e;
+	m_categories.clear(); m_income.clear(); m_budget.clear(); m_recurring.clear();
 }
 
 void settings::addCategory(const QString& name, const QColor& color) {
+	modified = true;
 	m_categories.append(new category(m_catCounter, name, color));
 	m_catCounter++;
 }
 
 bool settings::removeCategory(const double& id) {
+	modified = true;
 	for (auto i = 0; i < m_categories.size(); i++) {
 		auto* c = m_categories[i];
 		if (*c == id) {
@@ -118,6 +142,7 @@ bool settings::removeCategory(const double& id) {
 }
 
 settings::category* settings::editCategory(const double& id) {
+	modified = true;
 	for (auto i = 0; i < m_categories.size(); i++) {
 		auto* c = m_categories[i];
 		if (*c == id) return c;
@@ -126,10 +151,12 @@ settings::category* settings::editCategory(const double& id) {
 }
 
 void settings::addToBalance(const double& amount) {
+	modified = true;
 	m_current_balance += amount;
 }
 
 void settings::setBalance(const double& amount) {
+	modified = true;
 	m_current_balance = amount;
 }
 

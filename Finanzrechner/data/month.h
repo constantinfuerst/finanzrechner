@@ -40,7 +40,9 @@ public:
 	
 	//data manipulation
 	void addBudget(const double& category, const double& amount, const QString& description);
+	void addBudget(transaction* budget);
 	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description);
+	void addTransaction(transaction* transaction);
 	bool removeTransaction(const QString& id);
 	transaction* modifyTransaction(const QString& id);
 

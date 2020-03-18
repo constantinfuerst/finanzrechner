@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "../data/transaction.h"
+#include "../data/month.h"
 
 class settings {
 public:
@@ -23,6 +24,8 @@ public:
 	
 private:
 	//DATA
+	bool modified = false;
+	
 	double m_idCounter;
 	double m_catCounter;
 	
@@ -55,4 +58,6 @@ public:
 	bool addMonthly(const double& amount, const QString& description, const int& category, const monthly_type& type);
 	bool removeMonthly(const QString& id);
 	transaction* editMonthly(const QString& id);
+
+	void fillMonth(month* m);
 };

@@ -3,4 +3,4 @@
 #include <QtCore>
 #include <QDateTime>
 
-#define savedir "C:\\Users\\Admin\\Desktop\\"
+#define savedir "C:\\Users\\Admin\\Desktop\\financecalc\\"

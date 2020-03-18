@@ -12,6 +12,7 @@ month::~month() {
 		delete e;
 	for (auto* e : m_budget)
 		delete e;
+	m_transactions.clear(); m_budget.clear();
 }
 
 QString month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {

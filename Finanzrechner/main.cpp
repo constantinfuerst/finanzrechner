@@ -4,6 +4,8 @@
 #include "data/transaction.h"
 #include "data/month.h"
 #include "dataFunctions/m_container.h"
+#include "dataFunctions/calc_evaluating.h"
+#include "settings/settings.h"
 
 int qtstart(int argc, char* argv[]) {
 	QApplication a(argc, argv);
@@ -12,9 +14,10 @@ int qtstart(int argc, char* argv[]) {
 	return a.exec();
 }
 
-void createMonth(month_container& mc) {
+void createMonth(settings& sets, month_container& mc) {
 	auto* new_month = mc.getMonth({ 2020, 3, 1 });
-
+	sets.fillMonth(new_month);
+	
 	new_month->addTransaction(transaction::INCOME, 2, 100, { 2020, 3, 9 }, "test1");
 	new_month->addTransaction(transaction::EXPENSE, 5, 1000, { 2020, 3, 5 }, "test2");
 	new_month->addTransaction(transaction::INCOME, 0, 10000, { 2020, 3, 1 }, "test3");
@@ -24,12 +27,21 @@ void createMonth(month_container& mc) {
 	new_month->addBudget(41, 199, "test6");
 }
 
+void storeSavings(settings& sets, month_container& mc) {
+	sets.setBalance(100000);
+	auto* m = mc.getMonth({ 2020, 3, 1 });
+	const double monthlyBalance = evaluateMonth::calcBalance(*m);
+	sets.addToBalance(monthlyBalance);
+}
+
 int main(int argc, char *argv[]) {
+	settings sets;
 	month_container mc;
 	
-	createMonth(mc);
+	createMonth(sets, mc);
+	storeSavings(sets, mc);
 	
-	return qtstart(argc, argv);
+	return 1;//qtstart(argc, argv);
 }
 
 //TODO: Create GUI with input options and graphic output options

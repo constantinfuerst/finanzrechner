@@ -6,9 +6,17 @@ void month::addBudget(const double& category, const double& amount, const QStrin
 	m_budget.append(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
 }
 
+void month::addBudget(transaction* budget) {
+	m_budget.append(budget);
+}
+
 void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description){
 	modified = true;
 	m_transactions.append(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
+}
+
+void month::addTransaction(transaction* transaction) {
+	m_transactions.append(transaction);
 }
 
 bool month::removeTransaction(const QString& id) {
