@@ -11,6 +11,15 @@ transaction::transaction(const QJsonObject& json) {
 	delete t;
 }
 
+transaction::transaction(const transaction& t) {
+	m_amount = t.m_amount;
+	m_type = t.m_type;
+	m_category = t.m_category;
+	m_date = t.m_date;
+	m_description = t.m_description;
+	m_transID = t.m_transID;
+}
+
 transaction* transaction::fromJSON(const QJsonObject& json) const{
 	bool type = false; bool recurring = false; QString transID; QString description; double category = 0; double amount = 0; QDate date;
 	
@@ -39,7 +48,7 @@ QJsonObject* transaction::toJSON() const {
 	(*json)["amount"] = m_amount;
 	(*json)["category"] = m_category;
 	(*json)["date"] = m_date.toString("dd-MM-yyyy");
-	(*json)["description"] = m_description;
+	(*json)["description"] = (m_description.isEmpty() ? "" : m_description);
 	return json;
 }
 

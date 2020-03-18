@@ -14,9 +14,14 @@ int qtstart(int argc, char* argv[]) {
 	return a.exec();
 }
 
-void createMonth(settings& sets, month_container& mc) {
+void addSettings(){
+	settings::get().addMonthly(5000, "WORK", 0, settings::monthly_type::income);
+	settings::get().addMonthly(30, "WEED", 0, settings::monthly_type::recurring);
+}
+
+void createMonth(month_container& mc) {
 	auto* new_month = mc.getMonth({ 2020, 3, 1 });
-	sets.fillMonth(new_month);
+	settings::get().fillMonth(new_month);
 	
 	new_month->addTransaction(transaction::INCOME, 2, 100, { 2020, 3, 9 }, "test1");
 	new_month->addTransaction(transaction::EXPENSE, 5, 1000, { 2020, 3, 5 }, "test2");
@@ -27,19 +32,19 @@ void createMonth(settings& sets, month_container& mc) {
 	new_month->addBudget(41, 199, "test6");
 }
 
-void storeSavings(settings& sets, month_container& mc) {
-	sets.setBalance(100000);
+void storeSavings(month_container& mc) {
+	settings::get().setBalance(100000);
 	auto* m = mc.getMonth({ 2020, 3, 1 });
 	const double monthlyBalance = evaluateMonth::calcBalance(*m);
-	sets.addToBalance(monthlyBalance);
+	settings::get().addToBalance(monthlyBalance);
 }
 
 int main(int argc, char *argv[]) {
-	settings sets;
 	month_container mc;
-	
-	createMonth(sets, mc);
-	storeSavings(sets, mc);
+
+	addSettings();
+	createMonth(mc);
+	storeSavings(mc);
 	
 	return 1;//qtstart(argc, argv);
 }

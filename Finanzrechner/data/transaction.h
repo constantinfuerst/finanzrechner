@@ -22,6 +22,7 @@ public:
 	//constructors
 	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QString& description = "", const QDate& date = QDate(0,0,0));
 	transaction(const QJsonObject& json);
+	transaction(const transaction& t);
 
 	//json serializers / deserializers
 	transaction* fromJSON(const QJsonObject& json) const;

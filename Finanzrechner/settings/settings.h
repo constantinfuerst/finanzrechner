@@ -5,6 +5,9 @@
 
 class settings {
 public:
+	//SINGLETON ACCESS
+	static settings& get();
+	
 	//DEFINITIONS
 	struct category {
 		//data
@@ -37,11 +40,11 @@ private:
 	
 	//FUNCTIONS
 	QString generateID(const monthly_type& type, const int& category);
-	
-public:
+
 	//constructor / deconstructor
 	settings();
 	~settings();
+public:
 	
 	//json serializers / deserializers
 	bool readJSON();
