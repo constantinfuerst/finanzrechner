@@ -2,17 +2,10 @@
 #include "month.h"
 
 QString month::getFileName(const QDate& i_month) {
-	return savedir + QString("\\data\\") + i_month.toString("MM-yyyy") + ".json";
+	return savedir + QString("\\data\\") + i_month.toString("MM-yyyy");
 }
 
 bool month::writeJSON() {
-	QFile saveFile(getFileName(m_month));
-
-	if (!saveFile.open(QIODevice::WriteOnly)) {
-		qWarning("Couldn't open save file.");
-		return false;
-	}
-
 	QJsonArray transactions;
 	for (transaction* t : m_transactions) {
 		QJsonObject tobj = *t->toJSON();
@@ -33,24 +26,17 @@ bool month::writeJSON() {
 	month["transactions"] = transactions;
 	month["budget"] = budget;
 
-	QJsonDocument saveDoc(month);
-	saveFile.write(saveDoc.toJson(QJsonDocument::Compact));
-
-	saveFile.close();
+	auto* jdoc = new QJsonDocument(month);
+	cryptFileHandler::get().writeJSON(jdoc, getFileName(m_month));
+	delete jdoc;
+	
 	return true;
 }
 
 bool month::readJSON() {
-	QFile loadFile(getFileName(m_month));
-
-	if (!loadFile.open(QIODevice::ReadOnly)) {
-		qWarning("Couldn't open save file.");
-		return false;
-	}
-
-	QByteArray data = loadFile.readAll();
-	QJsonDocument jsonDoc(QJsonDocument::fromJson(data));
-	auto json = jsonDoc.object();
+	auto* jdoc = cryptFileHandler::get().readJSON(getFileName(m_month));
+	auto json = jdoc->object();
+	delete jdoc;
 
 	if (json.contains("budget") && json["budget"].isArray()) {
 		QJsonArray budgetArray = json["budget"].toArray();

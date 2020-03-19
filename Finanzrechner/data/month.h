@@ -1,6 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "transaction.h"
+#include "../cryptFileHandler/crypt.h"
 
 /*
  * ID format:

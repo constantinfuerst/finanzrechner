@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
 	createMonth(mc);
 	storeSavings(mc);
 	
-	return 1;//qtstart(argc, argv);
+	return qtstart(argc, argv);
 }
 
 //TODO: Create GUI with input options and graphic output options

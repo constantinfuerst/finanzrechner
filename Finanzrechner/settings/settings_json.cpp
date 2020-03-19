@@ -25,50 +25,32 @@ QJsonObject* settings::category::toJSON() const {
 }
 
 bool settings::readJSON() {
-	QString fname = QString(savedir) + "settings.json";
-	QFile loadFile(fname);
-
-	if (!loadFile.open(QIODevice::ReadOnly)) {
-		qWarning("Couldn't open settings file.");
-		return false;
-	}
-
-	QByteArray data = loadFile.readAll();
-	QJsonDocument jsonDoc(QJsonDocument::fromJson(data));
-	auto json = jsonDoc.object();
+	QString fname = QString(savedir) + "settings.dat";
+	
+	auto* jdoc = cryptFileHandler::get().readJSON(fname);
+	auto json = jdoc->object();
+	delete jdoc;
 
 	if (json.contains("monthly_income") && json["monthly_income"].isArray()) {
 		QJsonArray budgetArray = json["monthly_income"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_income.append(new transaction(e.toObject()));
-	}
-	else {
-		qWarning("Did not find income listing, possible corrupt settings file.");
-		return false;
-	}
+	} else return false;
 
 	if (json.contains("monthly_budget") && json["monthly_budget"].isArray()) {
 		QJsonArray budgetArray = json["monthly_budget"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_budget.append(new transaction(e.toObject()));
-	}
-	else {
-		qWarning("Did not find budget listing, possible corrupt settings file.");
-		return false;
-	}
+	} else return false;
 
 	if (json.contains("monthly_recurring") && json["monthly_recurring"].isArray()) {
 		QJsonArray budgetArray = json["monthly_recurring"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_recurring.append(new transaction(e.toObject()));
-	}
-	else {
-		qWarning("Did not find recurring listing, possible corrupt settings file.");
-		return false;
-	}
+	} else return false;
 
 	if (json.contains("categories") && json["categories"].isArray()) {
 		QJsonArray budgetArray = json["categories"].toArray();
@@ -76,42 +58,25 @@ bool settings::readJSON() {
 			if (e.isObject())
 				m_categories.append(new category(e.toObject()));
 	}
-	else {
-		qWarning("Did not find recurring listing, possible corrupt settings file.");
-		return false;
-	}
+	else return false;
+
 
 	if (json.contains("idCounter") && json["idCounter"].isDouble())
 		m_idCounter = json["idCounter"].toDouble();
-	else {
-		qWarning("Did not find recurring listing, possible corrupt settings file.");
-		return false;
-	}
+	else return false;
+
 	if (json.contains("current_balance") && json["current_balance"].isDouble())
 		m_current_balance = json["current_balance"].toDouble();
-	else {
-		qWarning("Did not find recurring listing, possible corrupt settings file.");
-		return false;
-	}
+	else return false;
+	
 	if (json.contains("catCounter") && json["catCounter"].isDouble())
 		m_catCounter = json["catCounter"].toDouble();
-	else {
-		qWarning("Did not find recurring listing, possible corrupt settings file.");
-		return false;
-	}
+	else return false;
 
 	return true;
 }
 
 bool settings::writeJSON() {
-	QString fname = QString(savedir) + "settings.json";
-	QFile saveFile(fname);
-
-	if (!saveFile.open(QIODevice::WriteOnly)) {
-		qWarning("Couldn't open settings file.");
-		return false;
-	}
-
 	QJsonArray categories;
 	for (auto* t : m_categories) {
 		QJsonObject tobj = *t->toJSON();
@@ -149,9 +114,10 @@ bool settings::writeJSON() {
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 
-	QJsonDocument saveDoc(settings);
-	saveFile.write(saveDoc.toJson(QJsonDocument::Compact));
-
-	saveFile.close();
+	QString fname = QString(savedir) + "settings.dat";
+	auto* jdoc = new QJsonDocument(settings);
+	cryptFileHandler::get().writeJSON(jdoc, fname);
+	delete jdoc;
+	
 	return true;
 }
