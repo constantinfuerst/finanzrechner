@@ -1,6 +1,10 @@
 #include "stdafx.h"
 #include "m_container.h"
 
+month_container::month_container(fileHandler* fh_in) {
+	fh = fh_in;
+}
+
 month_container::~month_container() {
 	for (auto* m : m_loaded_months)
 		delete m;
@@ -32,7 +36,7 @@ bool month_container::removeLoadedMonth(const QDate& date) {
 }
 
 month* month_container::loadMonth_unguarded(const QDate& date) {
-	auto* m = new month(date);
+	auto* m = new month(date, fh);
 	//m->readJSON();
 	m_loaded_months.append(m);
 	return m;

@@ -27,14 +27,14 @@ bool month::writeJSON() {
 	month["budget"] = budget;
 
 	auto* jdoc = new QJsonDocument(month);
-	cryptFileHandler::get().writeJSON(jdoc, getFileName(m_month));
+	fh->writeJSON(jdoc, getFileName(m_month));
 	delete jdoc;
 	
 	return true;
 }
 
 bool month::readJSON() {
-	auto* jdoc = cryptFileHandler::get().readJSON(getFileName(m_month));
+	auto* jdoc = fh->readJSON(getFileName(m_month));
 	auto json = jdoc->object();
 	delete jdoc;
 

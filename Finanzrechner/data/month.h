@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 #include "transaction.h"
-#include "../cryptFileHandler/crypt.h"
+#include "../fileHandler/fh.h"
 
 /*
  * ID format:
@@ -21,6 +21,7 @@ public:
 	QVector<transaction*> m_transactions;
 	QVector<transaction*> m_budget;
 private:
+	fileHandler* fh;
 	QDate m_month;
 	bool modified = false;
 	double m_idCounter = 0;
@@ -32,7 +33,7 @@ private:
 	
 public:
 	//constructors
-	month(const QDate& monthDate);
+	month(const QDate& monthDate, fileHandler* fh);
 	~month();
 	
 	//json serialization / deserialization

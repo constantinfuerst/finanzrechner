@@ -87,9 +87,13 @@ void settings::fillMonth(month* m) {
 		m->addTransaction(new transaction(*i));
 }
 
-settings& settings::get() {
-	static settings singleton;
+settings& settings::get(fileHandler* fh_in) {
+	static settings singleton (fh_in);
 	return singleton;
+}
+
+void settings::init(fileHandler* fh_in) {
+	get(fh_in);
 }
 
 QString settings::generateID(const monthly_type& type, const int& category) {
@@ -112,7 +116,8 @@ QString settings::generateID(const monthly_type& type, const int& category) {
 	return id;
 }
 
-settings::settings() {
+settings::settings(fileHandler* fh_in) {
+	if (fh_in != nullptr) fh = fh_in;
 	m_idCounter = 0; m_catCounter = 0; m_current_balance = 0;
 	readJSON();
 }

@@ -6,7 +6,8 @@
 class settings {
 public:
 	//SINGLETON ACCESS
-	static settings& get();
+	static settings& get(fileHandler* fh = nullptr);
+	static void init(fileHandler* fh);
 	
 	//DEFINITIONS
 	struct category {
@@ -31,6 +32,8 @@ private:
 	
 	double m_idCounter;
 	double m_catCounter;
+
+	fileHandler* fh = nullptr;
 	
 	QVector<transaction*> m_budget;
 	QVector<transaction*> m_recurring;
@@ -42,8 +45,8 @@ private:
 	QString generateID(const monthly_type& type, const int& category);
 
 	//constructor / deconstructor
-	settings();
 	~settings();
+	settings(fileHandler* fh);
 public:
 	
 	//json serializers / deserializers

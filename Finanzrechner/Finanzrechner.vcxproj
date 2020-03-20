@@ -110,13 +110,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="cryptFileHandler\crypt.cpp" />
+    <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp" />
     <ClCompile Include="dataFunctions\calc_evaluating.cpp" />
     <ClCompile Include="dataFunctions\m_container.cpp" />
     <ClCompile Include="data\month.cpp" />
     <ClCompile Include="data\month_datamanipulation.cpp" />
     <ClCompile Include="data\month_json.cpp" />
     <ClCompile Include="data\transaction.cpp" />
+    <ClCompile Include="fileHandler\plainFileHandler\plainFH.cpp" />
     <ClCompile Include="finanzrechner.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="settings\settings.cpp" />
@@ -127,11 +128,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cryptFileHandler\crypt.h" />
+    <ClInclude Include="fileHandler\cryptFileHandler\cryptFH.h" />
     <ClInclude Include="dataFunctions\calc_evaluating.h" />
     <ClInclude Include="dataFunctions\m_container.h" />
     <ClInclude Include="data\month.h" />
     <ClInclude Include="data\transaction.h" />
+    <ClInclude Include="fileHandler\fh.h" />
+    <ClInclude Include="fileHandler\plainFileHandler\plainFH.h" />
     <ClInclude Include="month\month.h" />
     <QtMoc Include="finanzrechner.h" />
     <ClInclude Include="settings\settings.h" />

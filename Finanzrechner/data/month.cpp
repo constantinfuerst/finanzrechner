@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "month.h"
 
-month::month(const QDate& monthDate) {
+month::month(const QDate& monthDate, fileHandler* fh_in) {
 	m_month = monthDate;
+	fh = fh_in;
 }
 
 month::~month() {

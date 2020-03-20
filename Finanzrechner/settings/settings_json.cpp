@@ -27,7 +27,7 @@ QJsonObject* settings::category::toJSON() const {
 bool settings::readJSON() {
 	QString fname = QString(savedir) + "settings.dat";
 	
-	auto* jdoc = cryptFileHandler::get().readJSON(fname);
+	auto* jdoc = fh->readJSON(fname);
 	auto json = jdoc->object();
 	delete jdoc;
 
@@ -116,7 +116,7 @@ bool settings::writeJSON() {
 
 	QString fname = QString(savedir) + "settings.dat";
 	auto* jdoc = new QJsonDocument(settings);
-	cryptFileHandler::get().writeJSON(jdoc, fname);
+	fh->writeJSON(jdoc, fname);
 	delete jdoc;
 	
 	return true;

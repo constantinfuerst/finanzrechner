@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "crypt.h"
+#include "cryptFH.h"
 
-QByteArray* cryptFileHandler::decrypt(QByteArray* cipher) {
+QByteArray* cryptFileHandler::decrypt(QByteArray* cipher) const {
 	using namespace CryptoPP;
 	auto* recover = new QByteArray();
 	
@@ -21,7 +21,7 @@ QByteArray* cryptFileHandler::decrypt(QByteArray* cipher) {
 	return recover;
 }
 
-QByteArray* cryptFileHandler::encrypt(QByteArray* data) {
+QByteArray* cryptFileHandler::encrypt(QByteArray* data) const {
 	using namespace CryptoPP;
 	auto* cipher = new QByteArray();
 
@@ -73,11 +73,6 @@ QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
 	file.close();
 	delete cipher, bytes;
 	return json;
-}
-
-cryptFileHandler& cryptFileHandler::get() {
-	static cryptFileHandler file_handler;
-	return file_handler;
 }
 
 cryptFileHandler::cryptFileHandler() {

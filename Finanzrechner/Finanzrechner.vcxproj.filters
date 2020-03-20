@@ -58,7 +58,10 @@
     <ClCompile Include="settings\settings_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cryptFileHandler\crypt.cpp">
+    <ClCompile Include="fileHandler\plainFileHandler\plainFH.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,7 +87,13 @@
     <ClInclude Include="dataFunctions\calc_evaluating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="cryptFileHandler\crypt.h">
+    <ClInclude Include="fileHandler\fh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fileHandler\plainFileHandler\plainFH.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fileHandler\cryptFileHandler\cryptFH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

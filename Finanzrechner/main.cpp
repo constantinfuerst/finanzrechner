@@ -6,6 +6,9 @@
 #include "dataFunctions/m_container.h"
 #include "dataFunctions/calc_evaluating.h"
 #include "settings/settings.h"
+#include "fileHandler/cryptFileHandler/cryptFH.h"
+#include "fileHandler/plainFileHandler/plainFH.h"
+#include "fileHandler/fh.h"
 
 int qtstart(int argc, char* argv[]) {
 	QApplication a(argc, argv);
@@ -40,8 +43,10 @@ void storeSavings(month_container& mc) {
 }
 
 int main(int argc, char *argv[]) {
-	month_container mc;
-
+	fileHandler* fh = new plainFileHandler;
+	month_container mc(fh);
+	settings::init(fh);
+	
 	addSettings();
 	createMonth(mc);
 	storeSavings(mc);
