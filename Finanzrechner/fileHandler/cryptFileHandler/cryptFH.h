@@ -1,5 +1,7 @@
 #pragma once
 #include "stdafx.h"
+
+#ifdef compileWithCrypt
 #include "../fh.h"
 
 #include "filters.h"
@@ -19,3 +21,4 @@ public:
 	bool writeJSON(QJsonDocument* jdoc, const QString& fname) override;
 	QJsonDocument* readJSON(const QString& fname) override;
 };
+#endif

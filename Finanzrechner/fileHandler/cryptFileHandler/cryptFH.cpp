@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#ifdef compileWithCrypt
 #include "cryptFH.h"
 
 QByteArray* cryptFileHandler::decrypt(QByteArray* cipher) const {
@@ -79,3 +81,4 @@ cryptFileHandler::cryptFileHandler() {
 	memset(key, 0x00, sizeof(key));
 	memset(iv, 0x00, sizeof(iv));
 }
+#endif

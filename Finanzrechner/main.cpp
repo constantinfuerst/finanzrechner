@@ -6,9 +6,13 @@
 #include "dataFunctions/m_container.h"
 #include "dataFunctions/calc_evaluating.h"
 #include "settings/settings.h"
-#include "fileHandler/cryptFileHandler/cryptFH.h"
-#include "fileHandler/plainFileHandler/plainFH.h"
 #include "fileHandler/fh.h"
+
+#ifndef compileWithCrypt
+#include "fileHandler/plainFileHandler/plainFH.h"
+#elif
+#include "fileHandler/cryptFileHandler/cryptFH.h"
+#endif
 
 int qtstart(int argc, char* argv[]) {
 	QApplication a(argc, argv);
@@ -19,7 +23,7 @@ int qtstart(int argc, char* argv[]) {
 
 void addSettings(){
 	settings::get().addMonthly(5000, "WORK", 0, settings::monthly_type::income);
-	settings::get().addMonthly(30, "WEED", 0, settings::monthly_type::recurring);
+	settings::get().addMonthly(30, "PIZZA", 0, settings::monthly_type::recurring);
 }
 
 void createMonth(month_container& mc) {
@@ -43,7 +47,11 @@ void storeSavings(month_container& mc) {
 }
 
 int main(int argc, char *argv[]) {
-	fileHandler* fh = new plainFileHandler;
+#ifndef compileWithCrypt
+	auto* fh = new plainFileHandler;
+#elif
+	auto* fh = new cryptFileHandler;
+#endif
 	month_container mc(fh);
 	settings::init(fh);
 	

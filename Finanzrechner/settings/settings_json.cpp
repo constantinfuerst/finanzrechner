@@ -25,9 +25,10 @@ QJsonObject* settings::category::toJSON() const {
 }
 
 bool settings::readJSON() {
-	QString fname = QString(savedir) + "settings.dat";
+	QString fname = QString(savedir) + "settings";
 	
 	auto* jdoc = fh->readJSON(fname);
+	if (jdoc == nullptr) return false;
 	auto json = jdoc->object();
 	delete jdoc;
 
@@ -114,7 +115,7 @@ bool settings::writeJSON() {
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 
-	QString fname = QString(savedir) + "settings.dat";
+	QString fname = QString(savedir) + "settings";
 	auto* jdoc = new QJsonDocument(settings);
 	fh->writeJSON(jdoc, fname);
 	delete jdoc;

@@ -3,6 +3,6 @@
 class fileHandler {
 public:
 	virtual ~fileHandler() = default;
-	virtual bool writeJSON(QJsonDocument* jdoc, const QString& fname);
-	virtual QJsonDocument* readJSON(const QString& fname);
+	virtual bool writeJSON(QJsonDocument* jdoc, const QString& fname) = 0;
+	virtual QJsonDocument* readJSON(const QString& fname) = 0;
 };
