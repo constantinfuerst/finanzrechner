@@ -3,44 +3,45 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
-QByteArray* cryptFileHandler::decrypt(QByteArray* cipher) const {
+QByteArray* cryptFileHandler::decrypt(QByteArray* ba) const {
 	using namespace CryptoPP;
-	auto* recover = new QByteArray();
+	ByteQueue recover, cipher;
+
+	for (auto b : *ba)
+		cipher.Put(b);
 	
 	CBC_Mode<AES>::Decryption dec;
 	dec.SetKeyWithIV(key, sizeof(key), iv, sizeof(iv));
 
-	// Recovered text will be less than cipher text
-	recover->resize(cipher->size());
-	ArraySink rs(reinterpret_cast<byte*>(&recover[0]), recover->size());
+	StreamTransformationFilter f2(dec, new Redirector(recover));
+	cipher.CopyTo(f2);
+	f2.MessageEnd();
 
-	ArraySource(reinterpret_cast<byte*>(cipher->data()), cipher->size(), true,
-		new StreamTransformationFilter(dec, new Redirector(rs)));
-
-	// Set recovered text length now that its known
-	recover->resize(rs.TotalPutLength());
-
-	return recover;
+	auto* ret_ba = new QByteArray;
+	for (auto i = 0; i < recover.CurrentSize(); i++)
+		ret_ba->append(recover[i]);
+	
+	return ret_ba;
 }
 
 QByteArray* cryptFileHandler::encrypt(QByteArray* data) const {
 	using namespace CryptoPP;
-	auto* cipher = new QByteArray();
+	ByteQueue plain, cipher;
+
+	plain.Put(reinterpret_cast<const byte*>(&data[0]), data->size());
 
 	CBC_Mode<AES>::Encryption enc;
 	enc.SetKeyWithIV(key, sizeof(key), iv, sizeof(iv));
 
-	// Make room for padding
-	cipher->resize(data->size() + AES::BLOCKSIZE);
-	ArraySink cs(reinterpret_cast<byte*>(&cipher[0]), cipher->size());
+	StreamTransformationFilter f1(enc, new Redirector(cipher));
+	plain.CopyTo(f1);
+	f1.MessageEnd();
 
-	ArraySource(reinterpret_cast<byte*>(data->data()), data->size(), true,
-		new StreamTransformationFilter(enc, new Redirector(cs)));
+	auto* ret_ba = new QByteArray;
+	for (auto i = 0; i < cipher.CurrentSize(); i++)
+		ret_ba->append(cipher[i]);
 
-	// Set cipher text length now that its known
-	cipher->resize(cs.TotalPutLength());
-
-	return cipher;
+	return ret_ba;
 }
 
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {

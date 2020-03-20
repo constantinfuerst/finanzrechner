@@ -50,6 +50,7 @@ int main(int argc, char *argv[]) {
 	auto* fh = new plainFileHandler;
 #else
 	auto* fh = new cryptFileHandler;
+	fh->setKEY("testpassword");
 #endif
 	month_container mc(fh);
 	settings::init(fh);
@@ -58,7 +59,7 @@ int main(int argc, char *argv[]) {
 	createMonth(mc);
 	storeSavings(mc);
 	
-	return qtstart(argc, argv);
+	return 1;// qtstart(argc, argv);
 }
 
 //WORKING ON: TODO: Implement / fix the crypto file storage handler
