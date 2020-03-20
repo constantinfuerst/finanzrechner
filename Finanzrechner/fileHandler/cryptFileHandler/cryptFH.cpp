@@ -81,4 +81,23 @@ cryptFileHandler::cryptFileHandler() {
 	memset(key, 0x00, sizeof(key));
 	memset(iv, 0x00, sizeof(iv));
 }
+
+cryptFileHandler::~cryptFileHandler() {
+	memset(key, 0x00, sizeof(key));
+	memset(iv, 0x00, sizeof(iv));
+}
+
+void cryptFileHandler::setKEY(const QString& password) {
+	using namespace CryptoPP;
+	SHAKE128 h_shake128;
+	SHAKE256 h_shake256;
+
+
+	h_shake128.Update(reinterpret_cast<const byte*>(password.data()), password.size());
+	h_shake128.Final(iv);
+
+	h_shake256.Update(reinterpret_cast<const byte*>(password.data()), password.size());
+	h_shake256.Final(key);
+}
+
 #endif

@@ -5,4 +5,4 @@
 
 #define savedir "C:\\Users\\Admin\\Desktop\\financecalc\\"
 
-//#define compileWithCrypt
+#define compileWithCrypt

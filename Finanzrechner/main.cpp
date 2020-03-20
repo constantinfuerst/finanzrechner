@@ -7,10 +7,9 @@
 #include "dataFunctions/calc_evaluating.h"
 #include "settings/settings.h"
 #include "fileHandler/fh.h"
-
-#ifndef compileWithCrypt
 #include "fileHandler/plainFileHandler/plainFH.h"
-#elif
+
+#ifdef compileWithCrypt
 #include "fileHandler/cryptFileHandler/cryptFH.h"
 #endif
 
@@ -49,7 +48,7 @@ void storeSavings(month_container& mc) {
 int main(int argc, char *argv[]) {
 #ifndef compileWithCrypt
 	auto* fh = new plainFileHandler;
-#elif
+#else
 	auto* fh = new cryptFileHandler;
 #endif
 	month_container mc(fh);
@@ -62,6 +61,7 @@ int main(int argc, char *argv[]) {
 	return qtstart(argc, argv);
 }
 
+//WORKING ON: TODO: Implement / fix the crypto file storage handler
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions

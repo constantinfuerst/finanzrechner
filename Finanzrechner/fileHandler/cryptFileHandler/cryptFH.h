@@ -4,6 +4,8 @@
 #ifdef compileWithCrypt
 #include "../fh.h"
 
+#include "cryptlib.h"
+#include "shake.h"
 #include "filters.h"
 #include "modes.h"
 #include "aes.h"
@@ -18,7 +20,10 @@ private:
 	
 public:
 	cryptFileHandler();
+	~cryptFileHandler() override;
+	
 	bool writeJSON(QJsonDocument* jdoc, const QString& fname) override;
 	QJsonDocument* readJSON(const QString& fname) override;
+	void setKEY(const QString& password);
 };
 #endif
