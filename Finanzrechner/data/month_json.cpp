@@ -35,6 +35,7 @@ bool month::writeJSON() {
 
 bool month::readJSON() {
 	auto* jdoc = fh->readJSON(getFileName(m_month));
+	if (jdoc == nullptr) return false;
 	auto json = jdoc->object();
 	delete jdoc;
 

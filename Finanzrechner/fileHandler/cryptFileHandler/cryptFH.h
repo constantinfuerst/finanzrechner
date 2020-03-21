@@ -12,11 +12,11 @@
 
 class cryptFileHandler : public fileHandler {
 private:
-	byte key[CryptoPP::AES::MAX_KEYLENGTH];
+	byte key[CryptoPP::AES::DEFAULT_KEYLENGTH];
 	byte iv[CryptoPP::AES::BLOCKSIZE];
 	
-	QByteArray* decrypt(QByteArray* cipher) const;
-	QByteArray* encrypt(QByteArray* data) const;
+	std::string* decrypt(const std::string* ciphertext) const;
+	std::string* encrypt(const std::string* plaintext) const;
 	
 public:
 	cryptFileHandler();
@@ -25,5 +25,8 @@ public:
 	bool writeJSON(QJsonDocument* jdoc, const QString& fname) override;
 	QJsonDocument* readJSON(const QString& fname) override;
 	void setKEY(const QString& password);
+	void eraseKEY();
+
+	void test();
 };
 #endif

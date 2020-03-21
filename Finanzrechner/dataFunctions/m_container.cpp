@@ -37,7 +37,7 @@ bool month_container::removeLoadedMonth(const QDate& date) {
 
 month* month_container::loadMonth_unguarded(const QDate& date) {
 	auto* m = new month(date, fh);
-	//m->readJSON();
+	m->readJSON();
 	m_loaded_months.append(m);
 	return m;
 }

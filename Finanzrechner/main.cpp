@@ -25,7 +25,7 @@ void addSettings(){
 	settings::get().addMonthly(30, "PIZZA", 0, settings::monthly_type::recurring);
 }
 
-void createMonth(month_container& mc) {
+void fillMonth(month_container& mc) {
 	auto* new_month = mc.getMonth({ 2020, 3, 1 });
 	settings::get().fillMonth(new_month);
 	
@@ -45,25 +45,21 @@ void storeSavings(month_container& mc) {
 	settings::get().addToBalance(monthlyBalance);
 }
 
+void accessMonth(month_container& mc) {
+	auto* m = mc.getMonth({ 2020, 3, 1 });
+}
+
 int main(int argc, char *argv[]) {
-#ifndef compileWithCrypt
-	auto* fh = new plainFileHandler;
-#else
 	auto* fh = new cryptFileHandler;
 	fh->setKEY("testpassword");
-#endif
-	month_container mc(fh);
-	settings::init(fh);
+
+	fh->test();
 	
-	addSettings();
-	createMonth(mc);
-	storeSavings(mc);
-	
-	return 1;// qtstart(argc, argv);
+	return 1;
 }
 
 //WORKING ON: TODO: Implement / fix the crypto file storage handler
-//TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions
 //TODO: Create scriptable evaluation functions
+//TODO: Create GUI with input options and graphic output options

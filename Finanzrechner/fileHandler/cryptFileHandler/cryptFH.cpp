@@ -3,102 +3,111 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
-QByteArray* cryptFileHandler::decrypt(QByteArray* ba) const {
+std::string* cryptFileHandler::encrypt(const std::string* plaintext) const {
 	using namespace CryptoPP;
-	ByteQueue recover, cipher;
-
-	for (auto b : *ba)
-		cipher.Put(b);
-	
-	CBC_Mode<AES>::Decryption dec;
-	dec.SetKeyWithIV(key, sizeof(key), iv, sizeof(iv));
-
-	StreamTransformationFilter f2(dec, new Redirector(recover));
-	cipher.CopyTo(f2);
-	f2.MessageEnd();
-
-	auto* ret_ba = new QByteArray;
-	for (auto i = 0; i < recover.CurrentSize(); i++)
-		ret_ba->append(recover[i]);
-	
-	return ret_ba;
+	auto* cipher = new std::string();
+	try {
+		CFB_Mode< AES >::Encryption e;
+		e.SetKeyWithIV(key, sizeof(key), iv);
+		StringSource(*plaintext, true, new StreamTransformationFilter(e, new StringSink(*cipher)));
+		
+		return cipher;
+		
+	}
+	catch (const Exception & e) {
+		return cipher;
+	}
 }
 
-QByteArray* cryptFileHandler::encrypt(QByteArray* data) const {
+std::string* cryptFileHandler::decrypt(const std::string* ciphertext) const {
 	using namespace CryptoPP;
-	ByteQueue plain, cipher;
+	auto* plain = new std::string();
+	try {
+		CFB_Mode< AES >::Decryption d;
+		d.SetKeyWithIV(key, sizeof(key), iv);
+		StringSource s(*ciphertext, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 
-	plain.Put(reinterpret_cast<const byte*>(&data[0]), data->size());
-
-	CBC_Mode<AES>::Encryption enc;
-	enc.SetKeyWithIV(key, sizeof(key), iv, sizeof(iv));
-
-	StreamTransformationFilter f1(enc, new Redirector(cipher));
-	plain.CopyTo(f1);
-	f1.MessageEnd();
-
-	auto* ret_ba = new QByteArray;
-	for (auto i = 0; i < cipher.CurrentSize(); i++)
-		ret_ba->append(cipher[i]);
-
-	return ret_ba;
+		return plain;
+	}
+	catch (const Exception & e) {
+		return plain;
+	}
 }
 
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
-	QFile file (fname + ".dat");
-	if (!file.open(QIODevice::WriteOnly)) {
+	QFile file (fname + ".txt");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
 		qWarning("Couldn't open file in write mode.");
 		return false;
 	}
 
-	auto* bytes = new QByteArray(jdoc->toBinaryData());
-	auto* cipher = encrypt(bytes);
+	const std::string json = QString(jdoc->toJson()).toUtf8();
+	auto* cipher = encrypt(&json);
 
-	file.write(*cipher);
+	QTextStream outputStream(&file);
+	outputStream << cipher->c_str();
 	file.close();
 	
-	delete cipher, bytes;
+	delete cipher;
 	return true;
 }
 
 QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	QFile file(fname + ".dat");
-	if (!file.open(QIODevice::ReadOnly)) {
+	QFile file(fname + ".txt");
+	if (!file.open(QIODevice::ReadOnly| QIODevice::Text)) {
 		qWarning("Couldn't open file in read mode.");
 		return false;
 	}
 
-	auto* cipher = new QByteArray(file.readAll());
-	auto* bytes = decrypt(cipher);
+	QTextStream inputStream(&file);
+	std::string cipher = inputStream.readAll().toStdString();
+	auto* plain = decrypt(&cipher);
 	auto* json = new QJsonDocument();
-	json->fromBinaryData(*bytes);
+	json->fromJson(plain->c_str());
 	
 	file.close();
-	delete cipher, bytes;
+	delete plain;
 	return json;
 }
 
 cryptFileHandler::cryptFileHandler() {
-	memset(key, 0x00, sizeof(key));
-	memset(iv, 0x00, sizeof(iv));
+	eraseKEY();
 }
 
 cryptFileHandler::~cryptFileHandler() {
-	memset(key, 0x00, sizeof(key));
-	memset(iv, 0x00, sizeof(iv));
+	eraseKEY();
 }
 
 void cryptFileHandler::setKEY(const QString& password) {
 	using namespace CryptoPP;
 	SHAKE128 h_shake128;
-	SHAKE256 h_shake256;
-
 
 	h_shake128.Update(reinterpret_cast<const byte*>(password.data()), password.size());
-	h_shake128.Final(iv);
+	h_shake128.Final(key);
 
-	h_shake256.Update(reinterpret_cast<const byte*>(password.data()), password.size());
-	h_shake256.Final(key);
+	h_shake128.Update(key, 16);
+	h_shake128.Final(iv);
+}
+
+void cryptFileHandler::eraseKEY() {
+	memset(key, 0x00, sizeof(key));
+	memset(iv, 0x00, sizeof(iv));
+}
+
+void cryptFileHandler::test() {
+	QJsonObject json_in;
+	json_in["test"] = true;
+	const QJsonDocument json_doc(json_in);
+	const std::string json_str = json_doc.toJson();
+	
+	auto* cipher = encrypt(&json_str);
+	auto* recover = decrypt(cipher);
+
+	const QJsonDocument json_rec_doc = QJsonDocument::fromJson(recover->c_str());
+	const QJsonObject json_rec = json_rec_doc.object();
+
+	bool value = false;
+	value = json_rec["test"].toBool();
 }
 
 #endif
