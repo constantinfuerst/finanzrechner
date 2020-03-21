@@ -35,39 +35,26 @@ std::string* cryptFileHandler::decrypt(const std::string* ciphertext) const {
 }
 
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
-	QFile file (fname + ".txt");
-	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-		qWarning("Couldn't open file in write mode.");
-		return false;
+	const auto jsonstr = jdoc->toJson().toStdString();
+	auto* cipher = encrypt(&jsonstr);
+
+	if (writeString(fname, cipher)) {
+		delete cipher;
+		return true;
 	}
-
-	const std::string json = QString(jdoc->toJson()).toUtf8();
-	auto* cipher = encrypt(&json);
-
-	QTextStream outputStream(&file);
-	outputStream << cipher->c_str();
-	file.close();
-	
 	delete cipher;
-	return true;
+	return false;
 }
 
 QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	QFile file(fname + ".txt");
-	if (!file.open(QIODevice::ReadOnly| QIODevice::Text)) {
-		qWarning("Couldn't open file in read mode.");
-		return false;
-	}
+	auto* cipher = readString(fname);
+	auto* plain = decrypt(cipher);
 
-	QTextStream inputStream(&file);
-	std::string cipher = inputStream.readAll().toStdString();
-	auto* plain = decrypt(&cipher);
-	auto* json = new QJsonDocument();
-	json->fromJson(plain->c_str());
-	
-	file.close();
-	delete plain;
-	return json;
+	auto* jdoc = new QJsonDocument();
+	*jdoc = QJsonDocument::fromJson(plain->c_str());
+
+	delete cipher, plain;
+	return jdoc;
 }
 
 cryptFileHandler::cryptFileHandler() {
@@ -94,7 +81,62 @@ void cryptFileHandler::eraseKEY() {
 	memset(iv, 0x00, sizeof(iv));
 }
 
-void cryptFileHandler::test() {
+bool cryptFileHandler::writeString(const QString& fname, const std::string* ciphertext) {
+	QFile file(fname + ".dat");
+	if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+		qWarning("Couldn't open file in write mode.");
+		return false;
+	}
+
+	QTextStream stream(&file);
+	stream.setCodec("UTF-8");
+	auto scipher = ciphertext->c_str();
+	
+	stream << scipher;
+
+	file.close();
+	return true;
+}
+
+std::string* cryptFileHandler::readString(const QString& fname) {
+	auto* str = new std::string();
+	QFile file(fname + ".dat");
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		qWarning("Couldn't open file in read mode.");
+		return nullptr;
+	}
+
+	auto* f = new char[file.size() + 1];
+	f[file.size()] = '\0';
+	QTextStream stream(&file);
+	stream.setCodec("UTF-8");
+	stream >> f;
+	
+	*str = f;
+	file.close();
+	delete[] f;
+
+	return str;
+}
+
+void cryptFileHandler::testWrite() {
+	const std::string data = "Hello";
+	QString fname = savedir; fname += "test_pwrite";
+
+	if (!writeString(fname, &data))
+		DebugBreak();
+
+	auto* str = readString(fname);
+	if (str == nullptr)
+		DebugBreak();
+
+	if (*str != data)
+		DebugBreak();
+
+	delete str;
+}
+
+void cryptFileHandler::testCrypto() const {
 	QJsonObject json_in;
 	json_in["test"] = true;
 	const QJsonDocument json_doc(json_in);
@@ -108,6 +150,39 @@ void cryptFileHandler::test() {
 
 	bool value = false;
 	value = json_rec["test"].toBool();
+
+	if (value == false)
+		DebugBreak();
+
+	delete cipher, recover;
+}
+
+void cryptFileHandler::testCryptoWrite() const {
+	QJsonObject json_in;
+	json_in["test"] = true;
+	const QJsonDocument json_doc(json_in);
+	const std::string json_str = json_doc.toJson();
+
+	auto* cipher = encrypt(&json_str);
+	///////////////////
+
+	QString fname = savedir; fname += "test_cwrite";
+	writeString(fname, cipher);
+	auto* recoveredCipher = readString(fname);
+
+	///////////////////
+	auto* recover = decrypt(recoveredCipher);
+
+	const QJsonDocument json_rec_doc = QJsonDocument::fromJson(recover->c_str());
+	const QJsonObject json_rec = json_rec_doc.object();
+
+	bool value = false;
+	value = json_rec["test"].toBool();
+
+	if (value == false)
+		DebugBreak();
+
+	delete cipher, recover;
 }
 
 #endif

@@ -53,7 +53,9 @@ int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
 	fh->setKEY("testpassword");
 
-	fh->test();
+	fh->testWrite();
+	fh->testCrypto();
+	fh->testCryptoWrite();
 	
 	return 1;
 }

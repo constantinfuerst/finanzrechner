@@ -17,6 +17,9 @@ private:
 	
 	std::string* decrypt(const std::string* ciphertext) const;
 	std::string* encrypt(const std::string* plaintext) const;
+
+	static bool writeString(const QString& fname, const std::string* ciphertext);
+	static std::string* readString(const QString& fname);
 	
 public:
 	cryptFileHandler();
@@ -27,6 +30,8 @@ public:
 	void setKEY(const QString& password);
 	void eraseKEY();
 
-	void test();
+	void testCrypto() const;
+	void testCryptoWrite() const;
+	static void testWrite();
 };
 #endif
