@@ -1,4 +1,7 @@
 #pragma once
+
+#include <streambuf>
+#include <fstream>
 #include <QtWidgets>
 #include <QtCore>
 #include <QDateTime>

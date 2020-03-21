@@ -53,9 +53,19 @@ int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
 	fh->setKEY("testpassword");
 
-	fh->testWrite();
-	fh->testCrypto();
-	fh->testCryptoWrite();
+	month_container mc(fh);
+	settings::init(fh);
+
+	const bool fill = false;
+
+	if (fill) {
+		addSettings();
+		fillMonth(mc);
+		storeSavings(mc);
+	}
+	else {
+		accessMonth(mc);
+	}
 	
 	return 1;
 }

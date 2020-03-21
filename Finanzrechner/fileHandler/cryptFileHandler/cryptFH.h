@@ -4,11 +4,13 @@
 #ifdef compileWithCrypt
 #include "../fh.h"
 
+#include "files.h"
 #include "cryptlib.h"
 #include "shake.h"
 #include "filters.h"
 #include "modes.h"
 #include "aes.h"
+#include "../plainFileHandler/plainFH.h"
 
 class cryptFileHandler : public fileHandler {
 private:
@@ -29,9 +31,5 @@ public:
 	QJsonDocument* readJSON(const QString& fname) override;
 	void setKEY(const QString& password);
 	void eraseKEY();
-
-	void testCrypto() const;
-	void testCryptoWrite() const;
-	static void testWrite();
 };
 #endif

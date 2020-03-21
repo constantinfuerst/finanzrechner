@@ -28,4 +28,3 @@ bool plainFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	saveFile.close();
 	return true;
 }
-
