@@ -37,8 +37,9 @@ bool settings::readJSON() {
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_income.append(new transaction(e.toObject()));
-	} else return false;
-
+	}
+	else return false;
+	
 	if (json.contains("monthly_budget") && json["monthly_budget"].isArray()) {
 		QJsonArray budgetArray = json["monthly_budget"].toArray();
 		for (auto e : budgetArray)

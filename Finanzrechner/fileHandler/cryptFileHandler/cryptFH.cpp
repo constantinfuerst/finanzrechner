@@ -5,14 +5,20 @@
 
 bool cryptFileHandler::encrypt(const QString& fname, const std::string* plaintext) const {
 	using namespace CryptoPP;
+
+	std::string ivstr; ivstr.reserve(32);
+	AutoSeededRandomPool prng;
+	RandomNumberSource(prng, AES::BLOCKSIZE, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
+	ArraySource(iv, AES::BLOCKSIZE, true, new StringSink(ivstr));
+	
 	std::string writeFile = fname.toStdString() + ".dat";
-	std::string cipher; cipher.reserve(plaintext->size());
+	std::string cipher; cipher.reserve(plaintext->size() + 32);
 	
 	try {
-		CFB_Mode< AES >::Encryption e;
+		CFB_Mode<AES>::Encryption e;
 		e.SetKeyWithIV(key, sizeof(key), iv);
 		StringSource(*plaintext, true, new StreamTransformationFilter(e, new StringSink(cipher)));
-		StringSource(cipher, true, new Base64Encoder(new FileSink(writeFile.c_str())));
+		StringSource(ivstr + cipher, true, new Base64Encoder(new FileSink(writeFile.c_str())));
 		
 		return true;
 	}
@@ -29,10 +35,15 @@ std::string* cryptFileHandler::decrypt(std::string* data) const {
 	cipher.reserve(data->size());
 	StringSource(*data, true, new Base64Decoder(new StringSink(cipher)));
 
+	const std::string ivstr = cipher.substr(0, 16);
+	const std::string datastr = cipher.substr(17);
+	
+	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
+	
 	try {
-		CFB_Mode< AES >::Decryption d;
+		CFB_Mode<AES>::Decryption d;
 		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(cipher.c_str(), true, new StreamTransformationFilter(d, new StringSink(*plain)));
+		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 
 		return plain;
 	}
@@ -44,8 +55,7 @@ std::string* cryptFileHandler::decrypt(std::string* data) const {
 std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
-	std::string data;
-	std::string cipher;
+	std::string data, cipher;
 	
 	std::ifstream read(fname.toStdString() + ".dat");
 	if (!read.is_open())
@@ -54,11 +64,16 @@ std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	FileSource(read, true, new StringSink(data));
 	cipher.reserve(data.size());
 	StringSource(data, true, new Base64Decoder(new StringSink(cipher)));
+
+	const std::string ivstr = cipher.substr(0, 16);
+	const std::string datastr = cipher.substr(17);
+	
+	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
 	
 	try {
-		CFB_Mode< AES >::Decryption d;
+		CFB_Mode<AES>::Decryption d;
 		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(cipher, true, new StreamTransformationFilter(d, new StringSink(*plain)));
+		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 
 		read.close();
 		return plain;
@@ -97,9 +112,9 @@ bool cryptFileHandler::checkKEY() const {
 	if (!fin.is_open())
 		return false;
 	
-	char ch; std::string start; short count = 0;
+	char ch; std::string start; short count = 0; short limit = 24 + 3;
 	while (fin >> std::noskipws >> ch) {
-		start += ch; count++; if (count == 3) break;
+		start += ch; count++; if (count == limit) break;
 	}
 
 	auto* dec = decrypt(&start);
@@ -112,14 +127,10 @@ bool cryptFileHandler::checkKEY() const {
 
 void cryptFileHandler::setKEY(const QString& password) {
 	using namespace CryptoPP;
-	SHAKE128 h_shake128;
 	SHAKE256 h_shake256;
 
 	h_shake256.Update(reinterpret_cast<const byte*>(password.data()), password.size());
 	h_shake256.Final(key);
-	
-	h_shake128.Update(reinterpret_cast<const byte*>(password.data()), password.size());
-	h_shake128.Final(iv);
 }
 
 void cryptFileHandler::eraseKEY() {

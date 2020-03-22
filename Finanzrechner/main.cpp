@@ -52,22 +52,23 @@ void accessMonth(month_container& mc) {
 int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
 	fh->setKEY("testpassword");
-	
 	if (!fh->checkKEY())
 		return false;
 	
-	month_container mc(fh);
-	settings::init(fh);
+	{
+		month_container mc(fh);
+		settings::init(fh);
 
-	const bool fill = true;
+		const bool fill = false;
 
-	if (fill) {
-		addSettings();
-		fillMonth(mc);
-		storeSavings(mc);
-	}
-	else {
-		accessMonth(mc);
+		if (fill) {
+			addSettings();
+			fillMonth(mc);
+			storeSavings(mc);
+		}
+		else {
+			accessMonth(mc);
+		}
 	}
 	
 	fh->eraseKEY();
@@ -75,8 +76,9 @@ int main(int argc, char *argv[]) {
 	return true;
 }
 
+//TODO: Implement salting and csprng for iv to make encryption actually safe
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions
 //TODO: Create scriptable evaluation functions
 //TODO: Create GUI with input options and graphic output options
-//TODO: Figure out if repeating letters in each file lower security of encryption
+//TODO: Implement a "update password" function that decrypts every file in the database one by one into memory and reencrypts with the new key

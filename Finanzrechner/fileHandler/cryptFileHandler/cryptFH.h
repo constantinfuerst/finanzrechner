@@ -12,6 +12,7 @@
 #include "modes.h"
 #include "aes.h"
 #include "base64.h"
+#include "osrng.h"
 
 class cryptFileHandler : public fileHandler {
 private:
