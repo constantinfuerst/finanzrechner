@@ -52,11 +52,14 @@ void accessMonth(month_container& mc) {
 int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
 	fh->setKEY("testpassword");
-
+	
+	if (!fh->checkKEY())
+		return false;
+	
 	month_container mc(fh);
 	settings::init(fh);
 
-	const bool fill = false;
+	const bool fill = true;
 
 	if (fill) {
 		addSettings();
@@ -67,11 +70,13 @@ int main(int argc, char *argv[]) {
 		accessMonth(mc);
 	}
 	
-	return 1;
+	fh->eraseKEY();
+	
+	return true;
 }
 
-//WORKING ON: TODO: Implement / fix the crypto file storage handler
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions
 //TODO: Create scriptable evaluation functions
 //TODO: Create GUI with input options and graphic output options
+//TODO: Figure out if repeating letters in each file lower security of encryption

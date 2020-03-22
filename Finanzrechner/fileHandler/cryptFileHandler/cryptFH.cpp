@@ -21,6 +21,26 @@ bool cryptFileHandler::encrypt(const QString& fname, const std::string* plaintex
 	}
 }
 
+std::string* cryptFileHandler::decrypt(std::string* data) const {
+	using namespace CryptoPP;
+	auto* plain = new std::string();
+	std::string cipher;
+	
+	cipher.reserve(data->size());
+	StringSource(*data, true, new Base64Decoder(new StringSink(cipher)));
+
+	try {
+		CFB_Mode< AES >::Decryption d;
+		d.SetKeyWithIV(key, sizeof(key), iv);
+		StringSource(cipher.c_str(), true, new StreamTransformationFilter(d, new StringSink(*plain)));
+
+		return plain;
+	}
+	catch (const Exception & e) {
+		return plain;
+	}
+}
+
 std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
@@ -70,14 +90,35 @@ cryptFileHandler::~cryptFileHandler() {
 	eraseKEY();
 }
 
+bool cryptFileHandler::checkKEY() const {
+	std::string settingsFname = std::string(savedir) + "settings.dat";
+
+	std::ifstream fin(settingsFname);
+	if (!fin.is_open())
+		return false;
+	
+	char ch; std::string start; short count = 0;
+	while (fin >> std::noskipws >> ch) {
+		start += ch; count++; if (count == 3) break;
+	}
+
+	auto* dec = decrypt(&start);
+	std::string result = *dec; delete dec;
+	
+	if (result[0] == -98 && result[1] == 13)
+		return true;
+	return false;
+}
+
 void cryptFileHandler::setKEY(const QString& password) {
 	using namespace CryptoPP;
 	SHAKE128 h_shake128;
+	SHAKE256 h_shake256;
 
+	h_shake256.Update(reinterpret_cast<const byte*>(password.data()), password.size());
+	h_shake256.Final(key);
+	
 	h_shake128.Update(reinterpret_cast<const byte*>(password.data()), password.size());
-	h_shake128.Final(key);
-
-	h_shake128.Update(key, 16);
 	h_shake128.Final(iv);
 }
 
