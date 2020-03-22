@@ -10,6 +10,7 @@
 #include "filters.h"
 #include "modes.h"
 #include "aes.h"
+#include "base64.h"
 #include "../plainFileHandler/plainFH.h"
 
 class cryptFileHandler : public fileHandler {
@@ -17,11 +18,8 @@ private:
 	byte key[CryptoPP::AES::DEFAULT_KEYLENGTH];
 	byte iv[CryptoPP::AES::BLOCKSIZE];
 	
-	std::string* decrypt(const std::string* ciphertext) const;
-	std::string* encrypt(const std::string* plaintext) const;
-
-	static bool writeString(const QString& fname, const std::string* ciphertext);
-	static std::string* readString(const QString& fname);
+	std::string* decrypt(const QString& fname) const;
+	bool encrypt(const QString& fname, const std::string* plaintext) const;
 	
 public:
 	cryptFileHandler();

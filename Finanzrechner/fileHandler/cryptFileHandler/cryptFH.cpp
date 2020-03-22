@@ -3,57 +3,62 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
-std::string* cryptFileHandler::encrypt(const std::string* plaintext) const {
+bool cryptFileHandler::encrypt(const QString& fname, const std::string* plaintext) const {
 	using namespace CryptoPP;
-	auto* cipher = new std::string();
+	std::string writeFile = fname.toStdString() + ".dat";
+	std::string cipher; cipher.reserve(plaintext->size());
+	
 	try {
 		CFB_Mode< AES >::Encryption e;
 		e.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(*plaintext, true, new StreamTransformationFilter(e, new FileSink()));
+		StringSource(*plaintext, true, new StreamTransformationFilter(e, new StringSink(cipher)));
+		StringSource(cipher, true, new Base64Encoder(new FileSink(writeFile.c_str())));
 		
-		return cipher;
+		return true;
 	}
 	catch (const Exception & e) {
-		return cipher;
+		return false;
 	}
 }
 
-std::string* cryptFileHandler::decrypt(const std::string* ciphertext) const {
+std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
+	std::string data;
+	std::string cipher;
+	
+	std::ifstream read(fname.toStdString() + ".dat");
+	if (!read.is_open())
+		return plain;
+	
+	FileSource(read, true, new StringSink(data));
+	cipher.reserve(data.size());
+	StringSource(data, true, new Base64Decoder(new StringSink(cipher)));
+	
 	try {
 		CFB_Mode< AES >::Decryption d;
 		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource s(*ciphertext, true, new StreamTransformationFilter(d, new StringSink(*plain)));
+		StringSource(cipher, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 
+		read.close();
 		return plain;
 	}
 	catch (const Exception & e) {
+		read.close();
 		return plain;
 	}
 }
 
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	const auto jsonstr = jdoc->toJson(QJsonDocument::Compact).toStdString();
-	auto* cipher = encrypt(&jsonstr);
-
-	if (writeString(fname, cipher)) {
-		delete cipher;
-		return true;
-	}
-	delete cipher;
-	return false;
+	return encrypt(fname, &jsonstr);
 }
 
 QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	auto* cipher = readString(fname);
-	if (cipher == nullptr) return nullptr;
-	auto* plain = decrypt(cipher);
-	auto* error = new QJsonParseError;
-	
-	auto* jdoc = new QJsonDocument(QJsonDocument::fromJson(plain->c_str(), error));
+	auto* plain = decrypt(fname);
+	auto* jdoc = new QJsonDocument(QJsonDocument::fromJson(plain->c_str()));
 
-	delete cipher, plain;
+	delete plain;
 	return jdoc;
 }
 
@@ -79,40 +84,6 @@ void cryptFileHandler::setKEY(const QString& password) {
 void cryptFileHandler::eraseKEY() {
 	memset(key, 0x00, sizeof(key));
 	memset(iv, 0x00, sizeof(iv));
-}
-
-bool cryptFileHandler::writeString(const QString& fname, const std::string* ciphertext) {
-	const std::string fnameStr = fname.toStdString() + ".dat";
-	std::ofstream ostream(fnameStr);
-	if (!ostream.is_open()) {
-		qWarning("Couldn't open file in write mode.");
-		return false;
-	}
-
-	ostream << ciphertext->c_str();
-
-	ostream.close();
-	return true;
-}
-
-std::string* cryptFileHandler::readString(const QString& fname) {
-	const std::string fnameStr = fname.toStdString() + ".dat";
-	std::ifstream istream(fnameStr);
-	
-
-	if (!istream.is_open()) {
-		qWarning("Couldn't open file in read mode.");
-		return nullptr;
-	}
-
-	istream.seekg(0, std::ios::end);
-	size_t len = istream.tellg();
-	istream.seekg(0);
-	auto* str = new std::string(len + 1, '\0');
-	istream.read(&(*str)[0], len);
-	
-	istream.close();
-	return str;
 }
 
 #endif
