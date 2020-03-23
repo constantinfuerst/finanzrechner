@@ -48,6 +48,7 @@ private:
 	~settings();
 	settings(fileHandler* fh);
 public:
+	void clear();
 	
 	//json serializers / deserializers
 	bool readJSON();

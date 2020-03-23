@@ -36,7 +36,7 @@ std::string* cryptFileHandler::decrypt(std::string* data) const {
 	StringSource(*data, true, new Base64Decoder(new StringSink(cipher)));
 
 	const std::string ivstr = cipher.substr(0, 16);
-	const std::string datastr = cipher.substr(17);
+	const std::string datastr = cipher.substr(16);
 	
 	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
 	
@@ -55,7 +55,8 @@ std::string* cryptFileHandler::decrypt(std::string* data) const {
 std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
-	std::string data, cipher;
+	std::string data;
+	std::string cipher;
 	
 	std::ifstream read(fname.toStdString() + ".dat");
 	if (!read.is_open())
@@ -66,7 +67,7 @@ std::string* cryptFileHandler::decrypt(const QString& fname) const {
 	StringSource(data, true, new Base64Decoder(new StringSink(cipher)));
 
 	const std::string ivstr = cipher.substr(0, 16);
-	const std::string datastr = cipher.substr(17);
+	const std::string datastr = cipher.substr(16);
 	
 	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
 	
@@ -110,7 +111,7 @@ bool cryptFileHandler::checkKEY() const {
 
 	std::ifstream fin(settingsFname);
 	if (!fin.is_open())
-		return false;
+		return true;
 	
 	char ch; std::string start; short count = 0; short limit = 24 + 3;
 	while (fin >> std::noskipws >> ch) {
@@ -120,7 +121,7 @@ bool cryptFileHandler::checkKEY() const {
 	auto* dec = decrypt(&start);
 	std::string result = *dec; delete dec;
 	
-	if (result[0] == -98 && result[1] == 13)
+	if (result[0] == '{' && result[1] == '\"')
 		return true;
 	return false;
 }

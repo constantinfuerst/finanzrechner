@@ -69,16 +69,17 @@ int main(int argc, char *argv[]) {
 		else {
 			accessMonth(mc);
 		}
+
+		settings::get().clear();
 	}
-	
+
 	fh->eraseKEY();
-	
 	return true;
 }
 
-//TODO: Implement salting and csprng for iv to make encryption actually safe
+//WORKING ON: TODO: Implement salting for key to make encryption safer
+//TODO: Implement a "update password" function that decrypts every file in the database one by one into memory and reencrypts with the new key
+//TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions
 //TODO: Create scriptable evaluation functions
-//TODO: Create GUI with input options and graphic output options
-//TODO: Implement a "update password" function that decrypts every file in the database one by one into memory and reencrypts with the new key

@@ -123,6 +123,18 @@ settings::settings(fileHandler* fh_in) {
 }
 
 settings::~settings() {
+	for (auto* e : m_categories)
+		delete e;
+	for (auto* e : m_income)
+		delete e;
+	for (auto* e : m_budget)
+		delete e;
+	for (auto* e : m_recurring)
+		delete e;
+	m_categories.clear(); m_income.clear(); m_budget.clear(); m_recurring.clear();
+}
+
+void settings::clear() {
 	if (modified)
 		writeJSON();
 	for (auto* e : m_categories)
