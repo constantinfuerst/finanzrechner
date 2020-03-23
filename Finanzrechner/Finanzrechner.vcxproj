@@ -126,6 +126,7 @@
     <ClCompile Include="data\month_datamanipulation.cpp" />
     <ClCompile Include="data\month_json.cpp" />
     <ClCompile Include="data\transaction.cpp" />
+    <ClCompile Include="fileHandler\cryptFileHandler\cfh_crypto.cpp" />
     <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp" />
     <ClCompile Include="fileHandler\plainFileHandler\plainFH.cpp" />
     <ClCompile Include="finanzrechner.cpp" />

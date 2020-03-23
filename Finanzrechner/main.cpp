@@ -51,8 +51,8 @@ void accessMonth(month_container& mc) {
 
 int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
-	fh->setKEY("testpassword");
-	if (!fh->checkKEY())
+	fh->setPassword("testpassword");
+	if (!fh->checkPassword())
 		return false;
 	
 	{
@@ -73,7 +73,6 @@ int main(int argc, char *argv[]) {
 		settings::get().clear();
 	}
 
-	fh->eraseKEY();
 	return true;
 }
 

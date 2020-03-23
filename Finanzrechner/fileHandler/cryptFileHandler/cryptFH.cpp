@@ -3,88 +3,6 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
-bool cryptFileHandler::encrypt(const QString& fname, const std::string* plaintext) const {
-	using namespace CryptoPP;
-
-	std::string ivstr; ivstr.reserve(32);
-	AutoSeededRandomPool prng;
-	RandomNumberSource(prng, AES::BLOCKSIZE, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
-	ArraySource(iv, AES::BLOCKSIZE, true, new StringSink(ivstr));
-	
-	std::string writeFile = fname.toStdString() + ".dat";
-	std::string cipher; cipher.reserve(plaintext->size() + 32);
-	
-	try {
-		CFB_Mode<AES>::Encryption e;
-		e.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(*plaintext, true, new StreamTransformationFilter(e, new StringSink(cipher)));
-		StringSource(ivstr + cipher, true, new Base64Encoder(new FileSink(writeFile.c_str())));
-		
-		return true;
-	}
-	catch (const Exception & e) {
-		return false;
-	}
-}
-
-std::string* cryptFileHandler::decrypt(std::string* data) const {
-	using namespace CryptoPP;
-	auto* plain = new std::string();
-	std::string cipher;
-	
-	cipher.reserve(data->size());
-	StringSource(*data, true, new Base64Decoder(new StringSink(cipher)));
-
-	const std::string ivstr = cipher.substr(0, 16);
-	const std::string datastr = cipher.substr(16);
-	
-	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
-	
-	try {
-		CFB_Mode<AES>::Decryption d;
-		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
-
-		return plain;
-	}
-	catch (const Exception & e) {
-		return plain;
-	}
-}
-
-std::string* cryptFileHandler::decrypt(const QString& fname) const {
-	using namespace CryptoPP;
-	auto* plain = new std::string();
-	std::string data;
-	std::string cipher;
-	
-	std::ifstream read(fname.toStdString() + ".dat");
-	if (!read.is_open())
-		return plain;
-	
-	FileSource(read, true, new StringSink(data));
-	cipher.reserve(data.size());
-	StringSource(data, true, new Base64Decoder(new StringSink(cipher)));
-
-	const std::string ivstr = cipher.substr(0, 16);
-	const std::string datastr = cipher.substr(16);
-	
-	StringSource(ivstr, true, new ArraySink(const_cast<byte*>(&iv[0]), AES::BLOCKSIZE));
-	
-	try {
-		CFB_Mode<AES>::Decryption d;
-		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
-
-		read.close();
-		return plain;
-	}
-	catch (const Exception & e) {
-		read.close();
-		return plain;
-	}
-}
-
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	const auto jsonstr = jdoc->toJson(QJsonDocument::Compact).toStdString();
 	return encrypt(fname, &jsonstr);
@@ -99,21 +17,23 @@ QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
 }
 
 cryptFileHandler::cryptFileHandler() {
-	eraseKEY();
+	eraseByte(key);
+	eraseByte(iv);
 }
 
 cryptFileHandler::~cryptFileHandler() {
-	eraseKEY();
+	eraseByte(key);
+	eraseString(password);
 }
 
-bool cryptFileHandler::checkKEY() const {
-	std::string settingsFname = std::string(savedir) + "settings.dat";
+bool cryptFileHandler::checkPassword() {
+	std::string settingsFname = std::string(savedir) + "\\data\\03-2020.dat";
 
 	std::ifstream fin(settingsFname);
 	if (!fin.is_open())
 		return true;
 	
-	char ch; std::string start; short count = 0; short limit = 24 + 3;
+	char ch; std::string start; short count = 0; short limit = 110 + 3;
 	while (fin >> std::noskipws >> ch) {
 		start += ch; count++; if (count == limit) break;
 	}
@@ -126,17 +46,50 @@ bool cryptFileHandler::checkKEY() const {
 	return false;
 }
 
-void cryptFileHandler::setKEY(const QString& password) {
+void cryptFileHandler::setPassword(const QString& password_in) {
+	password = password_in.toStdString();
+}
+
+void cryptFileHandler::eraseByte(byte* b) {
+	memset(b, 0x00, sizeof(*b));
+}
+
+void cryptFileHandler::eraseString(std::string& str) {
+	auto* start = &str[0];
+	memset(start, 0x00, str.size());
+	str.clear();
+	str = "";
+}
+
+std::string* cryptFileHandler::generateHKDF() {
 	using namespace CryptoPP;
-	SHAKE256 h_shake256;
+	std::string ivBASE, keySALT, info;
+	auto* data = new std::string();
+	
+	AutoSeededRandomPool prng;
+	RandomNumberSource(prng, AES::BLOCKSIZE, true, new StringSink(ivBASE));
+	prng.Reseed();
+	RandomNumberSource(prng, AES::MAX_KEYLENGTH, true, new StringSink(keySALT));
+	prng.Reseed();
+	RandomNumberSource(prng, AES::MAX_KEYLENGTH, true, new StringSink(info));
 
-	h_shake256.Update(reinterpret_cast<const byte*>(password.data()), password.size());
-	h_shake256.Final(key);
+	*data = ivBASE + keySALT + info;
+	return data;
 }
 
-void cryptFileHandler::eraseKEY() {
-	memset(key, 0x00, sizeof(key));
-	memset(iv, 0x00, sizeof(iv));
-}
+void cryptFileHandler::setHKDF(std::string* dataPLAIN) {
+	using namespace CryptoPP;
 
+	HKDF<SHA256> hkdf;
+	byte keySALT[AES::MAX_KEYLENGTH];
+	byte info[AES::MAX_KEYLENGTH];
+	byte ivBASE[AES::BLOCKSIZE];
+
+	StringSource(dataPLAIN->substr(0, 16), true, new ArraySink(ivBASE, AES::MAX_KEYLENGTH));
+	StringSource(dataPLAIN->substr(16, 32), true, new ArraySink(keySALT, AES::MAX_KEYLENGTH));
+	StringSource(dataPLAIN->substr(48, 32), true, new ArraySink(info, AES::MAX_KEYLENGTH));
+
+	hkdf.DeriveKey(key, sizeof(key), reinterpret_cast<const byte*>(password.c_str()), password.size(), keySALT, AES::MAX_KEYLENGTH, info, AES::MAX_KEYLENGTH);
+	hkdf.DeriveKey(iv, sizeof(iv), ivBASE, AES::BLOCKSIZE, keySALT, AES::MAX_KEYLENGTH, info, AES::MAX_KEYLENGTH);
+}
 #endif

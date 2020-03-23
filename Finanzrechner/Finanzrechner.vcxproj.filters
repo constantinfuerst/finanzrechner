@@ -64,6 +64,9 @@
     <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="fileHandler\cryptFileHandler\cfh_crypto.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
