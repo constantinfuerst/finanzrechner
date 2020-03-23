@@ -5,11 +5,11 @@
 
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	const auto jsonstr = jdoc->toJson(QJsonDocument::Compact).toStdString();
-	return encrypt(fname, &jsonstr);
+	return encrypt(fname.toStdString(), &jsonstr);
 }
 
 QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	auto* plain = decrypt(fname);
+	auto* plain = decrypt(fname.toStdString());
 	auto* jdoc = new QJsonDocument(QJsonDocument::fromJson(plain->c_str()));
 
 	delete plain;

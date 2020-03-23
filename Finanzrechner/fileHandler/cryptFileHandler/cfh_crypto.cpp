@@ -3,10 +3,10 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
-bool cryptFileHandler::encrypt(const QString& fname, const std::string* plaintext) {
+bool cryptFileHandler::encrypt(const std::string& fname, const std::string* plaintext) {
 	using namespace CryptoPP;
 
-	std::string writeFile = fname.toStdString() + ".dat";
+	std::string writeFile = fname + ".dat";
 	std::string cipher; cipher.reserve(plaintext->size() + 32);
 	
 	auto* hkdf = generateHKDF();
@@ -51,13 +51,13 @@ std::string* cryptFileHandler::decrypt(std::string* data) {
 	return plain;
 }
 
-std::string* cryptFileHandler::decrypt(const QString& fname) {
+std::string* cryptFileHandler::decrypt(const std::string& fname) {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
 	std::string data;
 	std::string cipher;
 
-	std::ifstream read(fname.toStdString() + ".dat");
+	std::ifstream read(fname + ".dat");
 	if (!read.is_open())
 		return plain;
 

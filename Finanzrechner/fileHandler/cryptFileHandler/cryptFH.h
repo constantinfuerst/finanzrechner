@@ -5,6 +5,7 @@
 #include "../fh.h"
 
 #include <fstream>
+#include <filesystem>
 
 #include <files.h>
 #include <cryptlib.h>
@@ -22,9 +23,9 @@ private:
 	byte iv[CryptoPP::AES::BLOCKSIZE];
 	std::string password;
 	
-	std::string* decrypt(const QString& fname);
+	std::string* decrypt(const std::string& fname);
 	std::string* decrypt(std::string* data);
-	bool encrypt(const QString& fname, const std::string* plaintext);
+	bool encrypt(const std::string& fname, const std::string* plaintext);
 
 	std::string* generateHKDF();
 	void setHKDF(std::string* data);
@@ -40,5 +41,7 @@ public:
 	QJsonDocument* readJSON(const QString& fname) override;
 	void setPassword(const QString& password);
 	bool checkPassword();
+
+	bool updatePassword(const QString& new_password);
 };
 #endif
