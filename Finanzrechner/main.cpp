@@ -49,34 +49,36 @@ void accessMonth(month_container& mc) {
 	auto* m = mc.getMonth({ 2020, 3, 1 });
 }
 
-int main(int argc, char *argv[]) {
-	auto* fh = new cryptFileHandler;
-	fh->setPassword("testpassword");
-	if (!fh->checkPassword())
-		return false;
-	
-	{
-		month_container mc(fh);
-		settings::init(fh);
+void dataInteract(fileHandler* fh) {
+	month_container mc(fh);
+	settings::init(fh);
 
-		const bool fill = false;
+	const bool fill = false;
 
-		if (fill) {
-			addSettings();
-			fillMonth(mc);
-			storeSavings(mc);
-		}
-		else {
-			accessMonth(mc);
-		}
-
-		settings::get().clear();
+	if (fill) {
+		addSettings();
+		fillMonth(mc);
+		storeSavings(mc);
+	}
+	else {
+		accessMonth(mc);
 	}
 
+	settings::get().clear();
+}
+
+int main(int argc, char *argv[]) {
+	auto* fh = new cryptFileHandler;
+	fh->setPassword("test_password");
+	if (!fh->checkPassword())
+		return false;
+
+	//dataInteract(fh);
+	
+	fh->updatePassword("other_test_password");
 	return true;
 }
 
-//WORKING ON: TODO: Implement a "update password" function that decrypts every file in the database one by one into memory and reencrypts with the new key
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions

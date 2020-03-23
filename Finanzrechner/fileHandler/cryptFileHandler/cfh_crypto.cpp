@@ -45,9 +45,11 @@ std::string* cryptFileHandler::decrypt(std::string* data) {
 		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 	}
 	catch (const Exception & e) {
-		qWarning("Encountered an error during decryption of string, most likely during checkKEY()");
+		delete plain, plain = nullptr;
 	}
 
+	if (plain == nullptr)
+		qWarning("Encountered an error during decryption of string");
 	return plain;
 }
 
@@ -75,9 +77,11 @@ std::string* cryptFileHandler::decrypt(const std::string& fname) {
 		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
 	}
 	catch (const Exception & e) {
-		qWarning("Encountered an error during decryption of file");
+		delete plain, plain = nullptr;
 	}
-
+	
+	if (plain == nullptr)
+		qWarning("Encountered an error during decryption of file");
 	read.close();
 	return plain;
 }

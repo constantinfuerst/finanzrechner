@@ -45,10 +45,7 @@ bool month::readJSON() {
 			if (e.isObject())
 				m_budget.append(new transaction(e.toObject()));
 	}
-	else {
-		qWarning("Did not find budget listing, possible corrupt file.");
-		return false;
-	}
+	else return false;
 
 	if (json.contains("transactions") && json["transactions"].isArray()) {
 		QJsonArray transactionArray = json["transactions"].toArray();
@@ -56,18 +53,12 @@ bool month::readJSON() {
 			if (e.isObject())
 				m_transactions.append(new transaction(e.toObject()));
 	}
-	else {
-		qWarning("Did not find transactions listing, possible corrupt file.");
-		return false;
-	}
+	else return false;
 
 	if (json.contains("idCounter") && json["idCounter"].isDouble()) {
 		m_idCounter = json["idCounter"].toDouble();
 	}
-	else {
-		qWarning("Did not find id listing, possible corrupt file.");
-		return false;
-	}
+	else return false;
 
 	return true;
 }
