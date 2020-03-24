@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "plainFH.h"
 
+//reads a qjsondocument from plaintext stored in a file
+//no file type ending required
 QJsonDocument* plainFileHandler::readJSON(const QString& fname) {
 	QFile loadFile(fname + ".json");
 
@@ -15,6 +17,9 @@ QJsonDocument* plainFileHandler::readJSON(const QString& fname) {
 	return jsonDoc;
 }
 
+
+//writes a qjsondocument as plaintext into a file using qfile hanlder
+//no file type ending required
 bool plainFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	QFile saveFile(fname + ".json");
 

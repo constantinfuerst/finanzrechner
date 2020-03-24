@@ -50,18 +50,22 @@ cryptFileHandler::~cryptFileHandler() {
 bool cryptFileHandler::checkPassword() {
 	std::string settingsFname = std::string(savedir) + "\\settings.dat";
 
+	//open the encrypted settings file
 	std::ifstream fin(settingsFname);
 	if (!fin.is_open())
 		return true;
-	
+
+	//read the values required for hkdf (actual size 80, base 64 size ~110) and the first few characters
 	char ch; std::string start; short count = 0; short limit = 110 + 3;
 	while (fin >> std::noskipws >> ch) {
 		start += ch; count++; if (count == limit) break;
 	}
 
+	//decrypt this first sequence of the file
 	auto* dec = decrypt(&start);
 	std::string result = *dec; delete dec;
-	
+
+	//check if we find valid json data structure start
 	if (result[0] == '{' && result[1] == '\"')
 		return true;
 	return false;

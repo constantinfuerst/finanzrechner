@@ -7,15 +7,20 @@
 #include <fstream>
 #include <filesystem>
 
-#include <files.h>
-#include <cryptlib.h>
-#include <filters.h>
-#include <modes.h>
-#include <aes.h>
-#include <sha.h>
-#include <base64.h>
-#include <osrng.h>
-#include <hkdf.h>
+#include <crypto-cpp/cryptlib.h>
+#include <crypto-cpp/files.h>
+#include <crypto-cpp/filters.h>
+#include <crypto-cpp/modes.h>
+#include <crypto-cpp/aes.h>
+#include <crypto-cpp/sha.h>
+#include <crypto-cpp/base64.h>
+#include <crypto-cpp/osrng.h>
+#include <crypto-cpp/hkdf.h>
+
+/////////
+/// Class used to securely store data with CBF-AES-128 encryption,
+/// providing the fileHandler interface
+/////////
 
 class cryptFileHandler : public fileHandler {
 private:

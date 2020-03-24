@@ -13,22 +13,30 @@ bool cryptFileHandler::updatePassword(const QString& new_password) {
 
 	if (!checkPassword())
 		return false;
-	
+
+	//iterate over all elements in directory
 	for (auto& p : fs::recursive_directory_iterator(savedir)) {
+		//set the password as the old one
 		setPassword(old_password);
+		//if the found element is a file
 		if (p.is_regular_file()) {
+			//obtain file path
 			const std::string fname = p.path().generic_string();
 			const std::string clearFname = fname.substr(0, fname.size() - 4);
 
+			//read and decrypt file
 			auto* data = readFile(fname);
 			auto* dec = decrypt(data);
 			delete data;
 			
 			if (dec == nullptr)
 				return false;
-			
+
+			//delete file
 			fs::remove(p);
+			//set password to new version
 			setPassword(new_password);
+			//encrypt the data obtained and save to file
 			if (!encrypt(clearFname, dec)) {
 				delete dec;
 				return false;

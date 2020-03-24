@@ -1,5 +1,9 @@
 #pragma once
 
+/////////
+/// Abstract class providing interchangeable json file handlers
+/////////
+
 class fileHandler {
 public:
 	virtual ~fileHandler() = default;
