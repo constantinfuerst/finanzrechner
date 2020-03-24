@@ -22,13 +22,15 @@ private:
 	byte key[CryptoPP::AES::MAX_KEYLENGTH];
 	byte iv[CryptoPP::AES::BLOCKSIZE];
 	std::string password;
+
+	std::string* readFile(const std::string& fname);
 	
-	std::string* decrypt(const std::string& fname);
 	std::string* decrypt(std::string* data);
 	bool encrypt(const std::string& fname, const std::string* plaintext);
 
 	std::string* generateHKDF();
-	void setHKDF(std::string* data);
+	void setHKDF(const std::string& data);
+	void setHKDF(std::string_view ivDATA, std::string_view saltDATA, std::string_view infoDATA);
 	
 	static void eraseString(std::string& str);
 	static void eraseByte(byte* b);

@@ -69,13 +69,13 @@ void dataInteract(fileHandler* fh) {
 
 int main(int argc, char *argv[]) {
 	auto* fh = new cryptFileHandler;
-	fh->setPassword("test_password");
+	fh->setPassword("other_test_password");
 	if (!fh->checkPassword())
 		return false;
 
-	//dataInteract(fh);
+	dataInteract(fh);
 	
-	fh->updatePassword("other_test_password");
+	//fh->updatePassword("other_test_password");
 	return true;
 }
 

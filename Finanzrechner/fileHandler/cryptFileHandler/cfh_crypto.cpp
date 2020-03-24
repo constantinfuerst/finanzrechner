@@ -3,14 +3,16 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
+//encrypt function storing plaintext in an CFB-AES-128 format
+//as a base64 encoded string in a specified file name (requiring full path)
 bool cryptFileHandler::encrypt(const std::string& fname, const std::string* plaintext) {
 	using namespace CryptoPP;
 
-	std::string writeFile = fname + ".dat";
-	std::string cipher; cipher.reserve(plaintext->size() + 32);
+	const std::string writeFile = fname + ".dat";
+	std::string cipher; cipher.reserve(plaintext->size());
 	
 	auto* hkdf = generateHKDF();
-	setHKDF(hkdf);
+	setHKDF(*hkdf);
 
 	try {
 		CFB_Mode<AES>::Encryption e;
@@ -27,62 +29,29 @@ bool cryptFileHandler::encrypt(const std::string& fname, const std::string* plai
 	}
 }
 
-std::string* cryptFileHandler::decrypt(std::string* data) {
+
+//decrypt function does not handle files but rather a string
+//as to make it usable both by full file and check password functions
+//will reserve strings with n amount of space
+//where n defined as macro "stringreserve" in stadfx.h
+std::string* cryptFileHandler::decrypt(std::string* encoded) {
 	using namespace CryptoPP;
 	auto* plain = new std::string();
-	std::string cipher;
+	std::string data, datastr; data.reserve(stringreserve); datastr.reserve(stringreserve);
 
-	cipher.reserve(data->size());
-	StringSource(*data, true, new Base64Decoder(new StringSink(cipher)));
-
-	const std::string datastr = cipher.substr(80);
-	std::string hkdf = cipher.substr(0, 80);
-	setHKDF(&hkdf);
+	StringSource(*encoded, true, new Base64Decoder(new StringSink(data)));
+	setHKDF(data);
+	datastr = data.substr(80);
 	
 	try {
 		CFB_Mode<AES>::Decryption d;
 		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
+		StringSource(data.data(), true, new StreamTransformationFilter(d, new StringSink(*plain)));
 	}
 	catch (const Exception & e) {
 		delete plain, plain = nullptr;
 	}
 
-	if (plain == nullptr)
-		qWarning("Encountered an error during decryption of string");
-	return plain;
-}
-
-std::string* cryptFileHandler::decrypt(const std::string& fname) {
-	using namespace CryptoPP;
-	auto* plain = new std::string();
-	std::string data;
-	std::string cipher;
-
-	std::ifstream read(fname + ".dat");
-	if (!read.is_open())
-		return plain;
-
-	FileSource(read, true, new StringSink(data));
-	cipher.reserve(data.size());
-	StringSource(data, true, new Base64Decoder(new StringSink(cipher)));
-	
-	const std::string datastr = cipher.substr(80);
-	std::string hkdf = cipher.substr(0, 80);
-	setHKDF(&hkdf);
-	
-	try {
-		CFB_Mode<AES>::Decryption d;
-		d.SetKeyWithIV(key, sizeof(key), iv);
-		StringSource(datastr, true, new StreamTransformationFilter(d, new StringSink(*plain)));
-	}
-	catch (const Exception & e) {
-		delete plain, plain = nullptr;
-	}
-	
-	if (plain == nullptr)
-		qWarning("Encountered an error during decryption of file");
-	read.close();
 	return plain;
 }
 

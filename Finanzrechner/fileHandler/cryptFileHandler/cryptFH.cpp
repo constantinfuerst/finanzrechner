@@ -3,17 +3,35 @@
 #ifdef compileWithCrypt
 #include "cryptFH.h"
 
+//composer to write a json document to a file
+//this overwrite uses the encryption functions
+//fname does not require a filetype ending
 bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
 	const auto jsonstr = jdoc->toJson(QJsonDocument::Compact).toStdString();
 	return encrypt(fname.toStdString(), &jsonstr);
 }
 
+//composer to read a json document from file
+//this overwrite reads a file encrypted by the crypto functions
+//fname does not require a filetype ending
 QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	auto* plain = decrypt(fname.toStdString());
+	auto* data = readFile(fname.toStdString());
+	auto* plain = decrypt(data);
 	auto* jdoc = new QJsonDocument(QJsonDocument::fromJson(plain->c_str()));
 
-	delete plain;
+	delete plain, data;
 	return jdoc;
+}
+
+//reads a file to string* using std::filestream and cryptopp::filesource
+std::string* cryptFileHandler::readFile(const std::string& fname) {
+	using namespace CryptoPP;
+	std::ifstream read(fname + ".dat");
+	if (!read.is_open())
+		return nullptr;
+
+	auto* data = new std::string();
+	FileSource(read, true, new StringSink(*data));
 }
 
 cryptFileHandler::cryptFileHandler() {
@@ -26,8 +44,11 @@ cryptFileHandler::~cryptFileHandler() {
 	eraseString(password);
 }
 
+//checks the validity of a supplied password
+//relies on generated and present settings file being readable
+//returns true should an error occur during file read process
 bool cryptFileHandler::checkPassword() {
-	std::string settingsFname = std::string(savedir) + "\\data\\03-2020.dat";
+	std::string settingsFname = std::string(savedir) + "\\settings.dat";
 
 	std::ifstream fin(settingsFname);
 	if (!fin.is_open())
@@ -46,14 +67,17 @@ bool cryptFileHandler::checkPassword() {
 	return false;
 }
 
+//sets the internal password variable, does not set KEY or IV parameters
 void cryptFileHandler::setPassword(const QString& password_in) {
 	password = password_in.toStdString();
 }
 
+//zeros out a byte sequence to fully erase memory traces
 void cryptFileHandler::eraseByte(byte* b) {
 	memset(b, 0x00, sizeof(*b));
 }
 
+//zeros out a char sequence (as std::string) to fully erase memory traces
 void cryptFileHandler::eraseString(std::string& str) {
 	auto* start = &str[0];
 	memset(start, 0x00, str.size());
@@ -61,6 +85,9 @@ void cryptFileHandler::eraseString(std::string& str) {
 	str = "";
 }
 
+//generates random iv base, key salt and info used for secure aes encryption
+//based on cryptopp randomness
+//returns values as string (requires encoding for printing purposes)
 std::string* cryptFileHandler::generateHKDF() {
 	using namespace CryptoPP;
 	std::string ivBASE, keySALT, info;
@@ -72,12 +99,14 @@ std::string* cryptFileHandler::generateHKDF() {
 	RandomNumberSource(prng, AES::MAX_KEYLENGTH, true, new StringSink(keySALT));
 	prng.Reseed();
 	RandomNumberSource(prng, AES::MAX_KEYLENGTH, true, new StringSink(info));
+	prng.Reseed();
 
 	*data = ivBASE + keySALT + info;
 	return data;
 }
 
-void cryptFileHandler::setHKDF(std::string* dataPLAIN) {
+//derives iv and key from supplied random values and password
+void cryptFileHandler::setHKDF(std::string_view ivDATA, std::string_view saltDATA, std::string_view infoDATA) {
 	using namespace CryptoPP;
 
 	HKDF<SHA256> hkdf;
@@ -85,11 +114,20 @@ void cryptFileHandler::setHKDF(std::string* dataPLAIN) {
 	byte info[AES::MAX_KEYLENGTH];
 	byte ivBASE[AES::BLOCKSIZE];
 
-	StringSource(dataPLAIN->substr(0, 16), true, new ArraySink(ivBASE, AES::MAX_KEYLENGTH));
-	StringSource(dataPLAIN->substr(16, 32), true, new ArraySink(keySALT, AES::MAX_KEYLENGTH));
-	StringSource(dataPLAIN->substr(48, 32), true, new ArraySink(info, AES::MAX_KEYLENGTH));
+	StringSource(ivDATA.data(), true, new ArraySink(ivBASE, AES::MAX_KEYLENGTH));
+	StringSource(saltDATA.data(), true, new ArraySink(keySALT, AES::MAX_KEYLENGTH));
+	StringSource(infoDATA.data(), true, new ArraySink(info, AES::MAX_KEYLENGTH));
 
 	hkdf.DeriveKey(key, sizeof(key), reinterpret_cast<const byte*>(password.c_str()), password.size(), keySALT, AES::MAX_KEYLENGTH, info, AES::MAX_KEYLENGTH);
 	hkdf.DeriveKey(iv, sizeof(iv), ivBASE, AES::BLOCKSIZE, keySALT, AES::MAX_KEYLENGTH, info, AES::MAX_KEYLENGTH);
 }
+
+//supplies actual "setHKDF" with values taken from a string split into string_views
+void cryptFileHandler::setHKDF(const std::string& data) {
+	const std::string_view iv_str(data.c_str(), 16);
+	const std::string_view salt_str(data.c_str() + 16, 32);
+	const std::string_view info_str(data.c_str() + 48, 32);
+	setHKDF(iv_str, salt_str, info_str);
+}
+
 #endif
