@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "settings.h"
 
+//deserializes a category for use in the settings json deserializer
 settings::category* settings::category::fromJSON(const QJsonObject& json) const {
 	QColor color; std::string name; int id = 0;
 
@@ -14,6 +15,7 @@ settings::category* settings::category::fromJSON(const QJsonObject& json) const 
 	return new category(id, name, color);
 }
 
+//serializes a category for use in the settings json serializer
 QJsonObject* settings::category::toJSON() const {
 	int color_r, color_g, color_b, color_a;
 	category_color.getRgb(&color_r, &color_g, &color_b, &color_a);
@@ -24,15 +26,20 @@ QJsonObject* settings::category::toJSON() const {
 	return json;
 }
 
+//json deserializer using the fileHandler to obtain a json document
+//reads all data into the settings singleton
 bool settings::readJSON() {
+	//return if fileHandler nonexistent
 	if (fh == nullptr) return false;
 	const std::string fname = std::string(savedir) + "settings";
-	
+
+	//obtain json document from filename and return if reading fails
 	auto* jdoc = fh->readJSON(fname);
 	if (jdoc == nullptr) return false;
 	auto json = jdoc->object();
 	delete jdoc;
 
+	//check for valid json, set variables and return if encountering missing data
 	if (json.contains("monthly_income") && json["monthly_income"].isArray()) {
 		QJsonArray budgetArray = json["monthly_income"].toArray();
 		for (auto e : budgetArray)
@@ -79,8 +86,12 @@ bool settings::readJSON() {
 	return true;
 }
 
+//json serializer creating a json document of all the settings data
+//delegating the write to the fileHandler function
 bool settings::writeJSON() {
+	//return if fileHandler nonexistent
 	if (fh == nullptr) return false;
+	//write transaction data into json arrays
 	QJsonArray categories;
 	for (auto* t : m_categories) {
 		QJsonObject tobj = *t->toJSON();
@@ -109,6 +120,7 @@ bool settings::writeJSON() {
 		delete t;
 	} m_recurring.clear();
 
+	//create the object and add data to it
 	QJsonObject settings;
 	settings["idCounter"] = m_idCounter;
 	settings["catCounter"] = m_catCounter;
@@ -118,6 +130,7 @@ bool settings::writeJSON() {
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 
+	//call the write of fileHandler with "savedir" macro and appending 'settings'
 	std::string fname = std::string(savedir) + "settings";
 	auto* jdoc = new QJsonDocument(settings);
 	fh->writeJSON(jdoc, fname);

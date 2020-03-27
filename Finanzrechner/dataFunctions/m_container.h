@@ -5,6 +5,7 @@
 #include "../data/month.h"
 #include "../fileHandler/fh.h"
 
+//container class used to organize and group all loaded months and their data
 class month_container {
 	//DATA
 	std::vector<month*> m_loaded_months;

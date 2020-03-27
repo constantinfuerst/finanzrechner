@@ -43,6 +43,5 @@ public:
 
 	//comparisons
 	bool operator==(const std::string& id) const;
-	bool operator==(const double& cat) const;
 	bool operator==(const filter& f) const;
 };

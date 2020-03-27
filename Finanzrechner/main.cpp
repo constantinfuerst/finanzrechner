@@ -48,9 +48,5 @@ int main(int argc, char *argv[]) {
 	return 1;
 }
 
-//WORKING ON: TODO: Refactor, optimize and comment the existing backend
 //TODO: Implement data readout functions for gui integration
 //TODO: Create GUI with input options and graphic output options
-//TODO: Create sctiptable sorting functions
-//TODO: Create scriptable displaying functions
-//TODO: Create scriptable evaluation functions

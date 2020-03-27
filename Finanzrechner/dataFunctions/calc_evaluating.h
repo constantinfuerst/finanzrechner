@@ -4,6 +4,8 @@
 #include "../data/transaction.h"
 #include "../data/month.h"
 
+//class used to evaluate months based on total balance
+//or calculating the result of filtered transactions
 class evaluateMonth {
 	//FUNCTIONS
 public:

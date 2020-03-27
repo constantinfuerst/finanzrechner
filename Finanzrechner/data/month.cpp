@@ -14,6 +14,7 @@ month::~month() {
 	m_transactions.clear();
 }
 
+//generate unique ID for identification in user interface
 std::string month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {
 	std::string num = std::to_string(m_idCounter);
 	while (num.size() < 16)
@@ -29,12 +30,14 @@ std::string month::generateID(const QDate& date, const bool& expense_or_income, 
 	return id;
 }
 
+//used to search for a month by date
 bool month::operator==(const QDate& date) const {
 	if (date.month() == m_month.month() && date.year() == m_month.year())
 		return true;
 	return false;
 }
 
+//implementation of filter comparison
 bool month::operator==(const filter& f) const {
 	if (f.fEnabled[filter::date]) {
 		if (

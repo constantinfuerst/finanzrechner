@@ -21,12 +21,14 @@ transaction::transaction(const transaction& t) {
 	m_transID = t.m_transID;
 }
 
+//reads transaction information out of a supplied json object
 transaction* transaction::fromJSON(const QJsonObject& json) const{
 	bool ttype = false, btype = false;
 	std::string transID, description;
 	double category = 0, amount = 0;
 	QDate date;
 
+	//check if data exists and set the appropriate values
 	if (json.contains("btype") && json["btype"].isBool())
 		btype = json["btype"].toBool();
 	if (json.contains("ttype") && json["ttype"].isBool())
@@ -41,10 +43,11 @@ transaction* transaction::fromJSON(const QJsonObject& json) const{
 		date = QDate::fromString(json["date"].toString());
 	if (json.contains("description") && json["description"].isString())
 		description = json["description"].toString().toStdString();
-	
+
 	return new transaction(btype, ttype, transID, category, amount, description, date);
 }
 
+//constructs a json object out of transaction data
 QJsonObject* transaction::toJSON() const {
 	auto* json = new QJsonObject;
 	(*json)["id"] = QString::fromStdString(m_transID);
@@ -57,18 +60,14 @@ QJsonObject* transaction::toJSON() const {
 	return json;
 }
 
+//compares id, returns true if equal
 bool transaction::operator==(const std::string& id) const {
 	if (id == m_transID)
 		return true;
 	return false;
 }
 
-bool transaction::operator==(const double& cat) const {
-	if (cat == m_category)
-		return true;
-	return false;
-}
-
+//implementation of filter sorting
 bool transaction::operator==(const filter& f) const {
 	if (f.fEnabled[filter::type]) {
 		bool accepted = false;

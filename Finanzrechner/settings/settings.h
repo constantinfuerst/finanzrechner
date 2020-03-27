@@ -3,6 +3,9 @@
 #include "../data/transaction.h"
 #include "../data/month.h"
 
+//singleton class used to store monthly data such as:
+//recurring payments, income, budgets and account balance
+//also provides acces to the category structure used for grouping payments and budgets
 class settings {
 public:
 	//SINGLETON ACCESS
