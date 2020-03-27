@@ -3,20 +3,20 @@
 
 void month::addBudget(const double& category, const double& amount, const std::string& description) {
 	modified = true;
-	m_budget.append(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
+	m_budget.push_back(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
 }
 
 void month::addBudget(transaction* budget) {
-	m_budget.append(budget);
+	m_budget.push_back(budget);
 }
 
 void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const std::string& description){
 	modified = true;
-	m_transactions.append(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
+	m_transactions.push_back(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
 }
 
 void month::addTransaction(transaction* transaction) {
-	m_transactions.append(transaction);
+	m_transactions.push_back(transaction);
 }
 
 bool month::removeTransaction(const std::string& id) {

@@ -7,7 +7,7 @@
 
 class month_container {
 	//DATA
-	QVector<month*> m_loaded_months;
+	std::vector<month*> m_loaded_months;
 	fileHandler* fh;
 	
 	//FUNCTIONS

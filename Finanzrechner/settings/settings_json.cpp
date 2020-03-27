@@ -25,7 +25,7 @@ QJsonObject* settings::category::toJSON() const {
 }
 
 bool settings::readJSON() {
-	QString fname = QString(savedir) + "settings";
+	const std::string fname = std::string(savedir) + "settings";
 	
 	auto* jdoc = fh->readJSON(fname);
 	if (jdoc == nullptr) return false;
@@ -36,7 +36,7 @@ bool settings::readJSON() {
 		QJsonArray budgetArray = json["monthly_income"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_income.append(new transaction(e.toObject()));
+				m_income.push_back(new transaction(e.toObject()));
 	}
 	else return false;
 	
@@ -44,21 +44,21 @@ bool settings::readJSON() {
 		QJsonArray budgetArray = json["monthly_budget"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_budget.append(new transaction(e.toObject()));
+				m_budget.push_back(new transaction(e.toObject()));
 	} else return false;
 
 	if (json.contains("monthly_recurring") && json["monthly_recurring"].isArray()) {
 		QJsonArray budgetArray = json["monthly_recurring"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_recurring.append(new transaction(e.toObject()));
+				m_recurring.push_back(new transaction(e.toObject()));
 	} else return false;
 
 	if (json.contains("categories") && json["categories"].isArray()) {
 		QJsonArray budgetArray = json["categories"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_categories.append(new category(e.toObject()));
+				m_categories.push_back(new category(e.toObject()));
 	}
 	else return false;
 

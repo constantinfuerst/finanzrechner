@@ -4,9 +4,6 @@
 #ifdef compileWithCrypt
 #include "../fh.h"
 
-#include <fstream>
-#include <filesystem>
-
 #include <crypto-cpp/cryptlib.h>
 #include <crypto-cpp/files.h>
 #include <crypto-cpp/filters.h>

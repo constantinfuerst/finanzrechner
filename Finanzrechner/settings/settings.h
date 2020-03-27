@@ -35,10 +35,10 @@ private:
 
 	fileHandler* fh = nullptr;
 	
-	QVector<transaction*> m_budget;
-	QVector<transaction*> m_recurring;
-	QVector<transaction*> m_income;
-	QVector<category*> m_categories;
+	std::vector<transaction*> m_budget;
+	std::vector<transaction*> m_recurring;
+	std::vector<transaction*> m_income;
+	std::vector<category*> m_categories;
 	double m_current_balance;
 	
 	//FUNCTIONS

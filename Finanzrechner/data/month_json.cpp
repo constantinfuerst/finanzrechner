@@ -43,7 +43,7 @@ bool month::readJSON() {
 		QJsonArray budgetArray = json["budget"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_budget.append(new transaction(e.toObject()));
+				m_budget.push_back(new transaction(e.toObject()));
 	}
 	else return false;
 
@@ -51,7 +51,7 @@ bool month::readJSON() {
 		QJsonArray transactionArray = json["transactions"].toArray();
 		for (auto e : transactionArray)
 			if (e.isObject())
-				m_transactions.append(new transaction(e.toObject()));
+				m_transactions.push_back(new transaction(e.toObject()));
 	}
 	else return false;
 

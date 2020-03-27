@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "transaction.h"
 #include "../fileHandler/fh.h"
+#include "../dataFunctions/filter.h"
 
 /*
  * ID format:
@@ -18,8 +19,8 @@ public:
 	static const bool TRANSACTION = true;
 
 	//DATA
-	QVector<transaction*> m_transactions;
-	QVector<transaction*> m_budget;
+	std::vector<transaction*> m_transactions;
+	std::vector<transaction*> m_budget;
 private:
 	fileHandler* fh;
 	QDate m_month;
@@ -50,4 +51,5 @@ public:
 
 	//data interaction
 	bool operator==(const QDate& date) const;
+	bool operator==(const filter& f) const;
 };

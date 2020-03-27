@@ -36,3 +36,25 @@ bool month::operator==(const QDate& date) const {
 		return true;
 	return false;
 }
+
+bool month::operator==(const filter& f) const {
+	bool match = true;
+	
+	if (f.fEnabled[filter::type]) {
+		
+	}
+	if (f.fEnabled[filter::amount]) {
+
+	}
+	if (f.fEnabled[filter::date]) {
+
+	}
+	if (f.fEnabled[filter::category]) {
+
+	}
+	if (f.fEnabled[filter::description]) {
+
+	}
+	
+	return match;
+}

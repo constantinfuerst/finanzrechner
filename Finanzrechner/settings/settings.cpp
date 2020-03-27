@@ -7,15 +7,15 @@ bool settings::addMonthly(const double& amount, const std::string& description, 
 	switch (type) {
 	case budget:
 		p = new transaction(transaction::EXPENSE, generateID(type, category), category, amount, description);
-		m_budget.append(p);
+		m_budget.push_back(p);
 		return true;
 	case recurring:
 		p = new transaction(transaction::EXPENSE, generateID(type, category), category, amount, description);
-		m_recurring.append(p);
+		m_recurring.push_back(p);
 		return true;
 	case income:
 		p = new transaction(transaction::INCOME, generateID(type, category), category, amount, description);
-		m_income.append(p);
+		m_income.push_back(p);
 		return true;
 	default: return false;
 	}
@@ -150,7 +150,7 @@ void settings::clear() {
 
 void settings::addCategory(const std::string& name, const QColor& color) {
 	modified = true;
-	m_categories.append(new category(m_catCounter, name, color));
+	m_categories.push_back(new category(m_catCounter, name, color));
 	m_catCounter++;
 }
 

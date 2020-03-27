@@ -75,12 +75,13 @@ int main(int argc, char *argv[]) {
 
 	dataInteract(fh);
 	
-	//fh->updatePassword("other_test_password");
 	return true;
 }
 
+//WORKING ON: TODO: Store budget/transaction data in transaction class instead of month
+//WORKING ON: TODO: Implement filter function
 //WORKING ON: TODO: Refactor, optimize and comment the existing backend
-//WORKING ON: TODO: Implement data readout functions for gui integration
+//TODO: Implement data readout functions for gui integration
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions

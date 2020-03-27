@@ -4,6 +4,12 @@
 #include <QtCore>
 #include <QDateTime>
 
+#include <string>
+#include <vector>
+#include <fstream>
+#include <array>
+#include <filesystem>
+
 #define stringreserve 2000
 #define savedir "C:\\Users\\Admin\\Desktop\\financecalc\\"
 #define compileWithCrypt
