@@ -6,16 +6,16 @@
 //composer to write a json document to a file
 //this overwrite uses the encryption functions
 //fname does not require a filetype ending
-bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const QString& fname) {
+bool cryptFileHandler::writeJSON(QJsonDocument* jdoc, const std::string& fname) {
 	const auto jsonstr = jdoc->toJson(QJsonDocument::Compact).toStdString();
-	return encrypt(fname.toStdString(), &jsonstr);
+	return encrypt(fname, &jsonstr);
 }
 
 //composer to read a json document from file
 //this overwrite reads a file encrypted by the crypto functions
 //fname does not require a filetype ending
-QJsonDocument* cryptFileHandler::readJSON(const QString& fname) {
-	auto* data = readFile(fname.toStdString());
+QJsonDocument* cryptFileHandler::readJSON(const std::string& fname) {
+	auto* data = readFile(fname);
 	auto* plain = decrypt(data);
 	auto* jdoc = new QJsonDocument(QJsonDocument::fromJson(plain->c_str()));
 
@@ -72,8 +72,8 @@ bool cryptFileHandler::checkPassword() {
 }
 
 //sets the internal password variable, does not set KEY or IV parameters
-void cryptFileHandler::setPassword(const QString& password_in) {
-	password = password_in.toStdString();
+void cryptFileHandler::setPassword(const std::string& password_in) {
+	password = password_in;
 }
 
 //zeros out a byte sequence to fully erase memory traces

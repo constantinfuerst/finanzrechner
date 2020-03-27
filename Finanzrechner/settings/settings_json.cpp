@@ -2,12 +2,12 @@
 #include "settings.h"
 
 settings::category* settings::category::fromJSON(const QJsonObject& json) const {
-	QColor color; QString name; int id = 0;
+	QColor color; std::string name; int id = 0;
 
 	if (json.contains("id") && json["id"].isDouble())
 		id = json["id"].toDouble();
 	if (json.contains("name") && json["name"].isString())
-		name = json["name"].isString();
+		name = json["name"].toString().toStdString();
 	if (json.contains("color") && json["color"].isArray())
 		color.setRgb(json["color"][0].toInt(), json["color"][1].toInt(), json["color"][2].toInt(), json["color"][3].toInt());
 
@@ -19,8 +19,8 @@ QJsonObject* settings::category::toJSON() const {
 	category_color.getRgb(&color_r, &color_g, &color_b, &color_a);
 	auto* json = new QJsonObject;
 	(*json)["id"] = (double)identifier;
-	(*json)["name"] = category_name;
-	(*json)["color"] = QJsonArray({ (double)color_r, double(color_b), double(color_g), double(color_a) });
+	(*json)["name"] = QString::fromStdString(category_name);
+	(*json)["color"] = QJsonArray({ static_cast<double>(color_r), static_cast<double>(color_b), static_cast<double>(color_g), static_cast<double>(color_a) });
 	return json;
 }
 
@@ -116,7 +116,7 @@ bool settings::writeJSON() {
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 
-	QString fname = QString(savedir) + "settings";
+	std::string fname = std::string(savedir) + "settings";
 	auto* jdoc = new QJsonDocument(settings);
 	fh->writeJSON(jdoc, fname);
 	delete jdoc;

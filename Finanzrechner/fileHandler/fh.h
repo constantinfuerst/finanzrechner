@@ -7,6 +7,6 @@
 class fileHandler {
 public:
 	virtual ~fileHandler() = default;
-	virtual bool writeJSON(QJsonDocument* jdoc, const QString& fname) = 0;
-	virtual QJsonDocument* readJSON(const QString& fname) = 0;
+	virtual bool writeJSON(QJsonDocument* jdoc, const std::string& fname) = 0;
+	virtual QJsonDocument* readJSON(const std::string& fname) = 0;
 };

@@ -79,6 +79,8 @@ int main(int argc, char *argv[]) {
 	return true;
 }
 
+//WORKING ON: TODO: Refactor, optimize and comment the existing backend
+//WORKING ON: TODO: Implement data readout functions for gui integration
 //TODO: Create GUI with input options and graphic output options
 //TODO: Create sctiptable sorting functions
 //TODO: Create scriptable displaying functions

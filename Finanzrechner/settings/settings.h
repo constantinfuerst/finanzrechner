@@ -13,10 +13,10 @@ public:
 	struct category {
 		//data
 		double identifier;
-		QString category_name;
+		std::string category_name;
 		QColor category_color;
 		//functions
-		category(const double& id, const QString& name, const QColor& color);
+		category(const double& id, const std::string& name, const QColor& color);
 		category(const QJsonObject& json);
 		bool operator==(const double& id) const ;
 		category* fromJSON(const QJsonObject& json) const;
@@ -42,7 +42,7 @@ private:
 	double m_current_balance;
 	
 	//FUNCTIONS
-	QString generateID(const monthly_type& type, const int& category);
+	std::string generateID(const monthly_type& type, const int& category);
 
 	//constructor / deconstructor
 	~settings();
@@ -55,16 +55,16 @@ public:
 	bool writeJSON();
 
 	//data manipulation
-	void addCategory(const QString& name, const QColor& color);
+	void addCategory(const std::string& name, const QColor& color);
 	bool removeCategory(const double& id);
 	category* editCategory(const double& id);
 	
 	void addToBalance(const double& amount);
 	void setBalance(const double& amount);
 
-	bool addMonthly(const double& amount, const QString& description, const int& category, const monthly_type& type);
-	bool removeMonthly(const QString& id);
-	transaction* editMonthly(const QString& id);
+	bool addMonthly(const double& amount, const std::string& description, const int& category, const monthly_type& type);
+	bool removeMonthly(const std::string& id);
+	transaction* editMonthly(const std::string& id);
 
 	void fillMonth(month* m);
 };

@@ -7,9 +7,9 @@
 //decrypts file with original encryption password and then re-encrypts it with supplied new password
 //also generates new info, salt and iv values for every file
 //depending on amount of files this is a very costly function and may take extraordinarily long to complete
-bool cryptFileHandler::updatePassword(const QString& new_password) {
+bool cryptFileHandler::updatePassword(const std::string& new_password) {
 	namespace fs = std::filesystem;
-	const QString old_password = QString::fromStdString(password);
+	const std::string old_password = password;
 
 	if (!checkPassword())
 		return false;

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "transaction.h"
 
-transaction::transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QString& description, const QDate& date) {
+transaction::transaction(const bool& type, const std::string& transID, const double& category, const double& amount, const std::string& description, const QDate& date) {
 	m_transID = transID;  m_type = type; m_category = category; m_amount = amount; m_date = date; m_description = description;
 }
 
@@ -21,7 +21,7 @@ transaction::transaction(const transaction& t) {
 }
 
 transaction* transaction::fromJSON(const QJsonObject& json) const{
-	bool type = false; bool recurring = false; QString transID; QString description; double category = 0; double amount = 0; QDate date;
+	bool type = false; bool recurring = false; std::string transID; std::string description; double category = 0; double amount = 0; QDate date;
 	
 	if (json.contains("type") && json["type"].isBool())
 		type = json["type"].toBool();
@@ -32,27 +32,27 @@ transaction* transaction::fromJSON(const QJsonObject& json) const{
 	if (json.contains("amount") && json["amount"].isDouble())
 		amount = json["amount"].toDouble();
 	if (json.contains("id") && json["id"].isString())
-		transID = json["id"].toString();
+		transID = json["id"].toString().toStdString();
 	if (json.contains("date") && json["date"].isString())
 		date = QDate::fromString(json["date"].toString());
 	if (json.contains("description") && json["description"].isString())
-		description = json["description"].toString();
+		description = json["description"].toString().toStdString();
 	
 	return new transaction(type, transID, category, amount, description, date);
 }
 
 QJsonObject* transaction::toJSON() const {
 	auto* json = new QJsonObject;
-	(*json)["id"] = m_transID;
+	(*json)["id"] = QString::fromStdString(m_transID);
 	(*json)["type"] = m_type;
 	(*json)["amount"] = m_amount;
 	(*json)["category"] = m_category;
 	(*json)["date"] = m_date.toString("dd-MM-yyyy");
-	(*json)["description"] = (m_description.isEmpty() ? "" : m_description);
+	(*json)["description"] = QString::fromStdString(m_description);
 	return json;
 }
 
-bool transaction::operator==(const QString& id) const {
+bool transaction::operator==(const std::string& id) const {
 	if (id == m_transID)
 		return true;
 	return false;

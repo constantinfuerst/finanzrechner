@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "month.h"
 
-QString month::getFileName(const QDate& i_month) {
-	return savedir + QString("\\data\\") + i_month.toString("MM-yyyy");
+std::string month::getFileName(const QDate& i_month) {
+	return savedir + std::string("\\data\\") + i_month.toString("MM-yyyy").toStdString();
 }
 
 bool month::writeJSON() {

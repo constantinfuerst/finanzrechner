@@ -11,6 +11,6 @@
 class plainFileHandler : public fileHandler {
 public:
 	~plainFileHandler() override = default;
-	bool writeJSON(QJsonDocument* jdoc, const QString& fname) override;
-	QJsonDocument* readJSON(const QString& fname) override;
+	bool writeJSON(QJsonDocument* jdoc, const std::string& fname) override;
+	QJsonDocument* readJSON(const std::string& fname) override;
 };

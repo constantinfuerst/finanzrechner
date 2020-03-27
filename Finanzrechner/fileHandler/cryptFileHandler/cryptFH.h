@@ -44,11 +44,11 @@ public:
 	cryptFileHandler();
 	~cryptFileHandler() override;
 
-	bool writeJSON(QJsonDocument* jdoc, const QString& fname) override;
-	QJsonDocument* readJSON(const QString& fname) override;
-	void setPassword(const QString& password);
+	bool writeJSON(QJsonDocument* jdoc, const std::string& fname) override;
+	QJsonDocument* readJSON(const std::string& fname) override;
+	void setPassword(const std::string& password);
 	bool checkPassword();
 
-	bool updatePassword(const QString& new_password);
+	bool updatePassword(const std::string& new_password);
 };
 #endif

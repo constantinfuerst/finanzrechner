@@ -16,11 +16,11 @@ month::~month() {
 	m_transactions.clear(); m_budget.clear();
 }
 
-QString month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {
-	QString num = QString::number(m_idCounter);
+std::string month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {
+	std::string num = std::to_string(m_idCounter);
 	while (num.size() < 16)
 		num = '0' + num;
-	QString id = date.toString("MM-yyyy");
+	std::string id = date.toString("MM-yyyy").toStdString();
 	id += "-";
 	id += (expense_or_income ? "1" : "0");
 	id += "-";

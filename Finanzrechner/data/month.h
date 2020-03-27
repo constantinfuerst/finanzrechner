@@ -28,8 +28,8 @@ private:
 	
 	//FUNCTIONS
 	//helper functions
-	QString generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction);
-	static QString getFileName(const QDate& i_month);
+	std::string generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction);
+	static std::string getFileName(const QDate& i_month);
 	
 public:
 	//constructors
@@ -41,12 +41,12 @@ public:
 	bool writeJSON();
 	
 	//data manipulation
-	void addBudget(const double& category, const double& amount, const QString& description);
+	void addBudget(const double& category, const double& amount, const std::string& description);
 	void addBudget(transaction* budget);
-	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description);
+	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const std::string& description);
 	void addTransaction(transaction* transaction);
-	bool removeTransaction(const QString& id);
-	transaction* modifyTransaction(const QString& id);
+	bool removeTransaction(const std::string& id);
+	transaction* modifyTransaction(const std::string& id);
 
 	//data interaction
 	bool operator==(const QDate& date) const;

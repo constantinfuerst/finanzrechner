@@ -13,14 +13,14 @@ private:
 	bool m_type;
 	double m_category;
 	QDate m_date;
-	QString m_description;
+	std::string m_description;
 	
 public:
-	QString m_transID;
+	std::string m_transID;
 	
 	//FUNCTIONS
 	//constructors
-	transaction(const bool& type, const QString& transID, const double& category, const double& amount, const QString& description = "", const QDate& date = QDate(0,0,0));
+	transaction(const bool& type, const std::string& transID, const double& category, const double& amount, const std::string& description = "", const QDate& date = QDate(1,1,1));
 	transaction(const QJsonObject& json);
 	transaction(const transaction& t);
 
@@ -29,6 +29,6 @@ public:
 	QJsonObject* toJSON() const;
 
 	//comparisons
-	bool operator==(const QString& id) const;
+	bool operator==(const std::string& id) const;
 	bool operator==(const double& cat) const;
 };

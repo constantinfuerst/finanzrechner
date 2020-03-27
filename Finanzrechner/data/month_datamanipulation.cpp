@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "month.h"
 
-void month::addBudget(const double& category, const double& amount, const QString& description) {
+void month::addBudget(const double& category, const double& amount, const std::string& description) {
 	modified = true;
 	m_budget.append(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
 }
@@ -10,7 +10,7 @@ void month::addBudget(transaction* budget) {
 	m_budget.append(budget);
 }
 
-void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const QString& description){
+void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const std::string& description){
 	modified = true;
 	m_transactions.append(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
 }
@@ -19,7 +19,7 @@ void month::addTransaction(transaction* transaction) {
 	m_transactions.append(transaction);
 }
 
-bool month::removeTransaction(const QString& id) {
+bool month::removeTransaction(const std::string& id) {
 	for (int i = 0; i < m_transactions.size(); i++) {
 		auto* t = m_transactions[i];
 		if (t->m_transID == id) {
@@ -32,7 +32,7 @@ bool month::removeTransaction(const QString& id) {
 	return false;
 }
 
-transaction* month::modifyTransaction(const QString& id) {
+transaction* month::modifyTransaction(const std::string& id) {
 	for (int i = 0; i < m_transactions.size(); i++) {
 		auto* t = m_transactions[i];
 		if (t->m_transID == id) {

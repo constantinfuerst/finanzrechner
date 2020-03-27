@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "settings.h"
 
-bool settings::addMonthly(const double& amount, const QString& description, const int& category, const monthly_type& type) {
+bool settings::addMonthly(const double& amount, const std::string& description, const int& category, const monthly_type& type) {
 	modified = true;
 	transaction* p = nullptr;
 	switch (type) {
@@ -21,7 +21,7 @@ bool settings::addMonthly(const double& amount, const QString& description, cons
 	}
 }
 
-bool settings::removeMonthly(const QString& id) {
+bool settings::removeMonthly(const std::string& id) {
 	modified = true;
 	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
@@ -55,7 +55,7 @@ bool settings::removeMonthly(const QString& id) {
 	return false;
 }
 
-transaction* settings::editMonthly(const QString& id) {
+transaction* settings::editMonthly(const std::string& id) {
 	modified = true;
 	if (id[0] == '0')
 		for (auto i = 0; i < m_budget.size(); i++) {
@@ -96,12 +96,12 @@ void settings::init(fileHandler* fh_in) {
 	get(fh_in);
 }
 
-QString settings::generateID(const monthly_type& type, const int& category) {
-	QString num = QString::number(m_idCounter);
+std::string settings::generateID(const monthly_type& type, const int& category) {
+	std::string num = std::to_string(m_idCounter);
 	while (num.size() < 16)
 		num = '0' + num;
 	m_idCounter++;
-	QString id;
+	std::string id;
 	switch (type) {
 	case budget: id += '0'; break;
 	case recurring: id += '1'; break;
@@ -109,7 +109,7 @@ QString settings::generateID(const monthly_type& type, const int& category) {
 	default: id += '3'; break;
 	}
 	id += '-';
-	QString cat = QString::number(category);
+	std::string cat = std::to_string(category);
 	while (cat.size() < 4)
 		cat = '0' + cat;
 	id += cat; id += '-'; id += num;
@@ -148,7 +148,7 @@ void settings::clear() {
 	m_categories.clear(); m_income.clear(); m_budget.clear(); m_recurring.clear();
 }
 
-void settings::addCategory(const QString& name, const QColor& color) {
+void settings::addCategory(const std::string& name, const QColor& color) {
 	modified = true;
 	m_categories.append(new category(m_catCounter, name, color));
 	m_catCounter++;
@@ -186,7 +186,7 @@ void settings::setBalance(const double& amount) {
 	m_current_balance = amount;
 }
 
-settings::category::category(const double& id, const QString& name, const QColor& color) {
+settings::category::category(const double& id, const std::string& name, const QColor& color) {
 	identifier = id; category_name = name; category_color = color;
 }
 
