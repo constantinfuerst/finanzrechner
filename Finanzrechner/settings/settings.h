@@ -11,7 +11,7 @@ public:
 	//SINGLETON ACCESS
 	static settings& get(fileHandler* fh = nullptr);
 	static void init(fileHandler* fh);
-	
+
 	//DEFINITIONS
 	struct category {
 		//data
@@ -21,29 +21,29 @@ public:
 		//functions
 		category(const double& id, const std::string& name, const QColor& color);
 		category(const QJsonObject& json);
-		bool operator==(const double& id) const ;
+		bool operator==(const double& id) const;
 		category* fromJSON(const QJsonObject& json) const;
 		QJsonObject* toJSON() const;
 	};
 	enum monthly_type {
 		budget, recurring, income
 	};
-	
+
 private:
 	//DATA
 	bool modified = false;
-	
+
 	double m_idCounter;
 	double m_catCounter;
 
 	fileHandler* fh = nullptr;
-	
+
 	std::vector<transaction*> m_budget;
 	std::vector<transaction*> m_recurring;
 	std::vector<transaction*> m_income;
 	std::vector<category*> m_categories;
 	double m_current_balance;
-	
+
 	//FUNCTIONS
 	std::string generateID(const monthly_type& type, const int& category);
 
@@ -52,7 +52,7 @@ private:
 	settings(fileHandler* fh);
 public:
 	void clear();
-	
+
 	//json serializers / deserializers
 	bool readJSON();
 	bool writeJSON();
@@ -61,7 +61,7 @@ public:
 	void addCategory(const std::string& name, const QColor& color);
 	bool removeCategory(const double& id);
 	category* editCategory(const double& id);
-	
+
 	void addToBalance(const double& amount);
 	void setBalance(const double& amount);
 

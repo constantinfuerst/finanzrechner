@@ -10,13 +10,13 @@ class month_container {
 	//DATA
 	std::vector<month*> m_loaded_months;
 	fileHandler* fh;
-	
+
 	//FUNCTIONS
 	month* findLoadedMonth(const QDate& date);
-	
+
 	//guarded versions prevent duplicate month loading
 	month* loadMonth_unguarded(const QDate& date);
-	
+
 public:
 	month_container(fileHandler* fh);
 	~month_container();

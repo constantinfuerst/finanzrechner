@@ -96,7 +96,7 @@ std::string* cryptFileHandler::generateHKDF() {
 	using namespace CryptoPP;
 	std::string ivBASE, keySALT, info;
 	auto* data = new std::string();
-	
+
 	AutoSeededRandomPool prng;
 	RandomNumberSource(prng, AES::BLOCKSIZE, true, new StringSink(ivBASE));
 	prng.Reseed();

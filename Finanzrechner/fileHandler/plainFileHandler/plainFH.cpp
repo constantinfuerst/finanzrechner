@@ -18,7 +18,6 @@ QJsonDocument* plainFileHandler::readJSON(const std::string& fname) {
 	return jsonDoc;
 }
 
-
 //writes a qjsondocument as plaintext into a file using qfile hanlder
 //no file type ending required
 bool plainFileHandler::writeJSON(QJsonDocument* jdoc, const std::string& fname) {

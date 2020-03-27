@@ -31,7 +31,6 @@ bool cryptFileHandler::encrypt(const std::string& fname, const std::string* plai
 	}
 }
 
-
 //decrypt function does not handle files but rather a string
 //as to make it usable both by full file and check password functions
 //will reserve strings with n amount of space
@@ -45,7 +44,7 @@ std::string* cryptFileHandler::decrypt(std::string* encoded) {
 	StringSource(*encoded, true, new Base64Decoder(new StringSink(data)));
 	setHKDF(data);
 	datastr = data.substr(80);
-	
+
 	try {
 		//decrypt the data into string "plain"
 		CFB_Mode<AES>::Decryption d;

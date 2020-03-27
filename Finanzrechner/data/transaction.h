@@ -16,24 +16,24 @@ public:
 	double m_amount;
 	bool m_bookingType;
 	bool m_tType;
-	
+
 private:
 	double m_category;
 	QDate m_date;
 	std::string m_description;
-	
+
 public:
 	std::string m_transID;
-	
+
 	//FUNCTIONS
 	//constructors
 	transaction(
 		const bool& bookingType, const bool& tType,
 		std::string& transID, const double& category,
 		const double& amount, const std::string& description = "",
-		const QDate& date = QDate(1,1,1)
+		const QDate& date = QDate(1, 1, 1)
 	);
-	
+
 	transaction(const QJsonObject& json);
 	transaction(const transaction& t);
 

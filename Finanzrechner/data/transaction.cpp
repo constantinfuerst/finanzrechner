@@ -22,7 +22,7 @@ transaction::transaction(const transaction& t) {
 }
 
 //reads transaction information out of a supplied json object
-transaction* transaction::fromJSON(const QJsonObject& json) const{
+transaction* transaction::fromJSON(const QJsonObject& json) const {
 	bool ttype = false, btype = false;
 	std::string transID, description;
 	double category = 0, amount = 0;

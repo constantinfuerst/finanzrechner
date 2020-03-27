@@ -21,21 +21,21 @@ private:
 	QDate m_month;
 	bool modified = false;
 	double m_idCounter = 0;
-	
+
 	//FUNCTIONS
 	//helper functions
 	std::string generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction);
 	static std::string getFileName(const QDate& i_month);
-	
+
 public:
 	//constructors
 	month(const QDate& monthDate, fileHandler* fh);
 	~month();
-	
+
 	//json serialization / deserialization
 	bool readJSON();
 	bool writeJSON();
-	
+
 	//data manipulation
 	//these functions only accept either budget or transaction
 	void addTransaction(const bool& ttype, const double& category, const double& amount, const QDate& date, const std::string& description);

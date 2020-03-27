@@ -28,7 +28,7 @@ bool cryptFileHandler::updatePassword(const std::string& new_password) {
 			auto* data = readFile(fname);
 			auto* dec = decrypt(data);
 			delete data;
-			
+
 			if (dec == nullptr)
 				return false;
 
@@ -41,7 +41,7 @@ bool cryptFileHandler::updatePassword(const std::string& new_password) {
 				delete dec;
 				return false;
 			}
-			
+
 			delete dec;
 		}
 	}

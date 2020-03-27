@@ -4,7 +4,7 @@
 // TEMPLATE FOR MATCHING FUNCTION
 //	bool class::operator==(const filter& f) const {
 //		if (f.fEnabled[filter::type]) {
-//			
+//
 //		}
 //		if (f.fEnabled[filter::amount]) {
 //
@@ -18,7 +18,7 @@
 //		if (f.fEnabled[filter::description]) {
 //
 //		}
-//		
+//
 //		return true;
 //	}
 
@@ -33,20 +33,20 @@ public:
 //PLEASE TREAT THESE MEMBERS AS READ ONLY
 	//ENABLED FILTERS
 	//uses index defined by filterType enumerator to select match of type if true
-	std::array<bool, 5> fEnabled = {false};
+	std::array<bool, 5> fEnabled = { false };
 	//FILTER DATA
 	//uses index defined by comment on LINE 10 to select match of type if true
-	std::array<bool, 4> fTypes_selected = {false};
+	std::array<bool, 4> fTypes_selected = { false };
 	//index 0 -> low range, index 1 -> high range, for single value set i0=i1
 	std::array<double, 2> fAmount_range = { 0 };
 	std::array<QDate, 2> fDate_range;
 	//single elements
 	std::vector<double> fCat_multiple;
 	std::string fDesc_match;
-//AND USE FOLLOWING FUNCTIONS FOR SETTING THEM
+	//AND USE FOLLOWING FUNCTIONS FOR SETTING THEM
 
-	//FILTER MANIPULATORS
-	//behavioral manipulation
+		//FILTER MANIPULATORS
+		//behavioral manipulation
 	inline void enableFilter(filterType ft);
 	inline void disableFilter(filterType ft);
 

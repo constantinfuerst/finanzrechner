@@ -30,7 +30,7 @@ bool month::writeJSON() {
 	auto* jdoc = new QJsonDocument(month);
 	fh->writeJSON(jdoc, getFileName(m_month));
 	delete jdoc;
-	
+
 	return true;
 }
 

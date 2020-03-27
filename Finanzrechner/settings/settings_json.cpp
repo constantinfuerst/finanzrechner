@@ -47,20 +47,22 @@ bool settings::readJSON() {
 				m_income.push_back(new transaction(e.toObject()));
 	}
 	else return false;
-	
+
 	if (json.contains("monthly_budget") && json["monthly_budget"].isArray()) {
 		QJsonArray budgetArray = json["monthly_budget"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_budget.push_back(new transaction(e.toObject()));
-	} else return false;
+	}
+	else return false;
 
 	if (json.contains("monthly_recurring") && json["monthly_recurring"].isArray()) {
 		QJsonArray budgetArray = json["monthly_recurring"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
 				m_recurring.push_back(new transaction(e.toObject()));
-	} else return false;
+	}
+	else return false;
 
 	if (json.contains("categories") && json["categories"].isArray()) {
 		QJsonArray budgetArray = json["categories"].toArray();
@@ -70,7 +72,6 @@ bool settings::readJSON() {
 	}
 	else return false;
 
-
 	if (json.contains("idCounter") && json["idCounter"].isDouble())
 		m_idCounter = json["idCounter"].toDouble();
 	else return false;
@@ -78,7 +79,7 @@ bool settings::readJSON() {
 	if (json.contains("current_balance") && json["current_balance"].isDouble())
 		m_current_balance = json["current_balance"].toDouble();
 	else return false;
-	
+
 	if (json.contains("catCounter") && json["catCounter"].isDouble())
 		m_catCounter = json["catCounter"].toDouble();
 	else return false;
@@ -135,6 +136,6 @@ bool settings::writeJSON() {
 	auto* jdoc = new QJsonDocument(settings);
 	fh->writeJSON(jdoc, fname);
 	delete jdoc;
-	
+
 	return true;
 }

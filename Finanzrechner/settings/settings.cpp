@@ -95,7 +95,7 @@ void settings::fillMonth(month* m) {
 }
 
 settings& settings::get(fileHandler* fh_in) {
-	static settings singleton (fh_in);
+	static settings singleton(fh_in);
 	return singleton;
 }
 
