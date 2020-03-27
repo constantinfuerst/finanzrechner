@@ -4,17 +4,24 @@
 bool settings::addMonthly(const double& amount, const std::string& description, const int& category, const monthly_type& type) {
 	modified = true;
 	transaction* p = nullptr;
+	std::string id = generateID(type, category);
 	switch (type) {
 	case budget:
-		p = new transaction(transaction::EXPENSE, generateID(type, category), category, amount, description);
+		p = new transaction(
+			transaction::BUDGET, transaction::EXPENSE, id, category, amount, description
+		);
 		m_budget.push_back(p);
 		return true;
 	case recurring:
-		p = new transaction(transaction::EXPENSE, generateID(type, category), category, amount, description);
+		p = new transaction(
+			transaction::TRANSACTION, transaction::EXPENSE, id, category, amount, description
+		);
 		m_recurring.push_back(p);
 		return true;
 	case income:
-		p = new transaction(transaction::INCOME, generateID(type, category), category, amount, description);
+		p = new transaction(
+			transaction::TRANSACTION, transaction::INCOME, id, category, amount, description
+		);
 		m_income.push_back(p);
 		return true;
 	default: return false;
@@ -80,11 +87,11 @@ transaction* settings::editMonthly(const std::string& id) {
 
 void settings::fillMonth(month* m) {
 	for (auto* r : m_recurring)
-		m->addTransaction(new transaction(*r));
+		m->addT(new transaction(*r));
 	for (auto* b : m_budget)
-		m->addBudget(new transaction(*b));
+		m->addT(new transaction(*b));
 	for (auto* i : m_income)
-		m->addTransaction(new transaction(*i));
+		m->addT(new transaction(*i));
 }
 
 settings& settings::get(fileHandler* fh_in) {

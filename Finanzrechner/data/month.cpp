@@ -11,9 +11,7 @@ month::~month() {
 		writeJSON();
 	for (auto* e : m_transactions)
 		delete e;
-	for (auto* e : m_budget)
-		delete e;
-	m_transactions.clear(); m_budget.clear();
+	m_transactions.clear();
 }
 
 std::string month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {
@@ -39,22 +37,6 @@ bool month::operator==(const QDate& date) const {
 
 bool month::operator==(const filter& f) const {
 	bool match = true;
-	
-	if (f.fEnabled[filter::type]) {
-		
-	}
-	if (f.fEnabled[filter::amount]) {
-
-	}
-	if (f.fEnabled[filter::date]) {
-
-	}
-	if (f.fEnabled[filter::category]) {
-
-	}
-	if (f.fEnabled[filter::description]) {
-
-	}
 	
 	return match;
 }

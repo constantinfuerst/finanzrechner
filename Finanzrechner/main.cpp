@@ -20,65 +20,28 @@ int qtstart(int argc, char* argv[]) {
 	return a.exec();
 }
 
-void addSettings(){
-	settings::get().addMonthly(5000, "WORK", 0, settings::monthly_type::income);
-	settings::get().addMonthly(30, "PIZZA", 0, settings::monthly_type::recurring);
-}
-
-void fillMonth(month_container& mc) {
-	auto* new_month = mc.getMonth({ 2020, 3, 1 });
-	settings::get().fillMonth(new_month);
-	
-	new_month->addTransaction(transaction::INCOME, 2, 100, { 2020, 3, 9 }, "test1");
-	new_month->addTransaction(transaction::EXPENSE, 5, 1000, { 2020, 3, 5 }, "test2");
-	new_month->addTransaction(transaction::INCOME, 0, 10000, { 2020, 3, 1 }, "test3");
-	new_month->addTransaction(transaction::EXPENSE, 6, 50, { 2020, 3, 12 }, "test4");
-
-	new_month->addBudget(10, 100, "test5");
-	new_month->addBudget(41, 199, "test6");
-}
-
-void storeSavings(month_container& mc) {
-	settings::get().setBalance(100000);
-	auto* m = mc.getMonth({ 2020, 3, 1 });
-	const double monthlyBalance = evaluateMonth::calcBalance(*m);
-	settings::get().addToBalance(monthlyBalance);
-}
-
-void accessMonth(month_container& mc) {
-	auto* m = mc.getMonth({ 2020, 3, 1 });
-}
-
-void dataInteract(fileHandler* fh) {
-	month_container mc(fh);
-	settings::init(fh);
-
-	const bool fill = false;
-
-	if (fill) {
-		addSettings();
-		fillMonth(mc);
-		storeSavings(mc);
-	}
-	else {
-		accessMonth(mc);
-	}
-
-	settings::get().clear();
-}
-
 int main(int argc, char *argv[]) {
-	auto* fh = new cryptFileHandler;
-	fh->setPassword("other_test_password");
-	if (!fh->checkPassword())
-		return false;
+	settings::init(nullptr);
 
-	dataInteract(fh);
+	month_container mc(nullptr);
+	auto* month = mc.getMonth({ 2020,3,1 });
 	
-	return true;
+	month->addTransaction(transaction::INCOME, 0, 100, { 2020, 3, 1 }, "");
+	month->addTransaction(transaction::EXPENSE, 1, 50, { 2020, 3, 1 }, "");
+	month->addBudget(1, 75);
+
+	const double balance = evaluateMonth::calcBalance(*month);
+	const double budget = evaluateMonth::calcCategory(*month, 1);
+	
+	if (balance != 50)
+		DebugBreak();
+	if (budget != 25)
+		DebugBreak();
+	
+	settings::get().clear();
+	return 1;
 }
 
-//WORKING ON: TODO: Store budget/transaction data in transaction class instead of month
 //WORKING ON: TODO: Implement filter function
 //WORKING ON: TODO: Refactor, optimize and comment the existing backend
 //TODO: Implement data readout functions for gui integration

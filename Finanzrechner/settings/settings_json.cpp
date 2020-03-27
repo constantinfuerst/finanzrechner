@@ -25,6 +25,7 @@ QJsonObject* settings::category::toJSON() const {
 }
 
 bool settings::readJSON() {
+	if (fh == nullptr) return false;
 	const std::string fname = std::string(savedir) + "settings";
 	
 	auto* jdoc = fh->readJSON(fname);
@@ -79,6 +80,7 @@ bool settings::readJSON() {
 }
 
 bool settings::writeJSON() {
+	if (fh == nullptr) return false;
 	QJsonArray categories;
 	for (auto* t : m_categories) {
 		QJsonObject tobj = *t->toJSON();

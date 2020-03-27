@@ -1,25 +1,33 @@
 #include "stdafx.h"
 #include "month.h"
 
-void month::addBudget(const double& category, const double& amount, const std::string& description) {
+void month::addTransaction(const bool& ttype, const double& category, const double& amount,
+	const QDate& date, const std::string& description)
+{
 	modified = true;
-	m_budget.push_back(new transaction(transaction::EXPENSE, generateID(m_month, transaction::EXPENSE, BUDGET), category, amount, description));
+	std::string id = generateID(m_month, ttype, transaction::TRANSACTION);
+	m_transactions.push_back(
+		new transaction(
+			transaction::TRANSACTION, ttype, id, category, amount, description, date
+		)
+	);
 }
 
-void month::addBudget(transaction* budget) {
-	m_budget.push_back(budget);
-}
-
-void month::addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const std::string& description){
+void month::addBudget(const double& category, const double& amount) {
 	modified = true;
-	m_transactions.push_back(new transaction(type, generateID(m_month, type, TRANSACTION), category, amount, description, date));
+	std::string id = generateID(m_month, transaction::EXPENSE, transaction::BUDGET);
+	m_transactions.push_back(
+		new transaction(
+			transaction::BUDGET, transaction::EXPENSE, id, category, amount
+		)
+	);
 }
 
-void month::addTransaction(transaction* transaction) {
+void month::addT(transaction* transaction) {
 	m_transactions.push_back(transaction);
 }
 
-bool month::removeTransaction(const std::string& id) {
+bool month::removeT(const std::string& id) {
 	for (int i = 0; i < m_transactions.size(); i++) {
 		auto* t = m_transactions[i];
 		if (t->m_transID == id) {
@@ -32,7 +40,7 @@ bool month::removeTransaction(const std::string& id) {
 	return false;
 }
 
-transaction* month::modifyTransaction(const std::string& id) {
+transaction* month::modifyT(const std::string& id) {
 	for (int i = 0; i < m_transactions.size(); i++) {
 		auto* t = m_transactions[i];
 		if (t->m_transID == id) {

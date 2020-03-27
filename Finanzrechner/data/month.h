@@ -14,13 +14,8 @@
 
 class month {
 public:
-	//DEFINITIONS
-	static const bool BUDGET = false;
-	static const bool TRANSACTION = true;
-
 	//DATA
 	std::vector<transaction*> m_transactions;
-	std::vector<transaction*> m_budget;
 private:
 	fileHandler* fh;
 	QDate m_month;
@@ -42,12 +37,14 @@ public:
 	bool writeJSON();
 	
 	//data manipulation
-	void addBudget(const double& category, const double& amount, const std::string& description);
-	void addBudget(transaction* budget);
-	void addTransaction(const bool& type, const double& category, const double& amount, const QDate& date, const std::string& description);
-	void addTransaction(transaction* transaction);
-	bool removeTransaction(const std::string& id);
-	transaction* modifyTransaction(const std::string& id);
+	//these functions only accept either budget or transaction
+	void addTransaction(const bool& ttype, const double& category, const double& amount, const QDate& date, const std::string& description);
+	void addBudget(const double& category, const double& amount);
+
+	//"T" functions operate on both budget and transaction
+	void addT(transaction* transaction);
+	bool removeT(const std::string& id);
+	transaction* modifyT(const std::string& id);
 
 	//data interaction
 	bool operator==(const QDate& date) const;

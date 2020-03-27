@@ -5,13 +5,19 @@
 class transaction {
 public:
 	//DEFINITIONS
+	//ttypes
 	static const bool EXPENSE = false;
 	static const bool INCOME = true;
+	//booking types
+	static const bool BUDGET = false;
+	static const bool TRANSACTION = true;
 
 	//DATA
 	double m_amount;
+	bool m_bookingType;
+	bool m_tType;
+	
 private:
-	bool m_type;
 	double m_category;
 	QDate m_date;
 	std::string m_description;
@@ -21,7 +27,13 @@ public:
 	
 	//FUNCTIONS
 	//constructors
-	transaction(const bool& type, const std::string& transID, const double& category, const double& amount, const std::string& description = "", const QDate& date = QDate(1,1,1));
+	transaction(
+		const bool& bookingType, const bool& tType,
+		std::string& transID, const double& category,
+		const double& amount, const std::string& description = "",
+		const QDate& date = QDate(1,1,1)
+	);
+	
 	transaction(const QJsonObject& json);
 	transaction(const transaction& t);
 
