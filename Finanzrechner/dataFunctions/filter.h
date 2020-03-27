@@ -3,8 +3,6 @@
 
 // TEMPLATE FOR MATCHING FUNCTION
 //	bool class::operator==(const filter& f) const {
-//		bool match = true;
-//		
 //		if (f.fEnabled[filter::type]) {
 //			
 //		}
@@ -21,7 +19,7 @@
 //
 //		}
 //		
-//		return match;
+//		return true;
 //	}
 
 struct filter {
@@ -31,7 +29,8 @@ public:
 		type, amount, date, category, description
 	};
 	//element types: 0 = expense, 1 = income, 2 = budget, 3 = transaction
-	
+
+//PLEASE TREAT THESE MEMBERS AS READ ONLY
 	//ENABLED FILTERS
 	//uses index defined by filterType enumerator to select match of type if true
 	std::array<bool, 5> fEnabled = {false};
@@ -44,7 +43,8 @@ public:
 	//single elements
 	std::vector<double> fCat_multiple;
 	std::string fDesc_match;
-	
+//AND USE FOLLOWING FUNCTIONS FOR SETTING THEM
+
 	//FILTER MANIPULATORS
 	//behavioral manipulation
 	inline void enableFilter(filterType ft);

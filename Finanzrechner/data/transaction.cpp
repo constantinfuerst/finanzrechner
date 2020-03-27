@@ -68,3 +68,43 @@ bool transaction::operator==(const double& cat) const {
 		return true;
 	return false;
 }
+
+bool transaction::operator==(const filter& f) const {
+	if (f.fEnabled[filter::type]) {
+		bool accepted = false;
+		if (m_tType == EXPENSE)
+			if (!f.fTypes_selected[0])
+				accepted = true;
+		if (m_tType == INCOME)
+			if (!f.fTypes_selected[1])
+				accepted = true;
+		if (m_bookingType == BUDGET)
+			if (!f.fTypes_selected[2])
+				accepted = true;
+		if (m_bookingType == TRANSACTION)
+			if (!f.fTypes_selected[3])
+				accepted = true;
+		if (!accepted) return false;
+	}
+	if (f.fEnabled[filter::amount]) {
+		if (m_amount < f.fAmount_range[0] || m_amount > f.fAmount_range[1])
+			return false;
+	}
+	if (f.fEnabled[filter::date]) {
+		if (m_date < f.fDate_range[0] || m_date > f.fDate_range[1])
+			return false;
+	}
+	if (f.fEnabled[filter::category]) {
+		bool found = false;
+		for (auto& d : f.fCat_multiple)
+			if (d == m_category)
+				found = true;
+		if (!found) return false;
+	}
+	if (f.fEnabled[filter::description]) {
+		if (m_description != f.fDesc_match)
+			return false;
+	}
+
+	return true;
+}

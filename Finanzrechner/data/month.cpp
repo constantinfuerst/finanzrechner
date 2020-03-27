@@ -36,7 +36,12 @@ bool month::operator==(const QDate& date) const {
 }
 
 bool month::operator==(const filter& f) const {
-	bool match = true;
-	
-	return match;
+	if (f.fEnabled[filter::date]) {
+		if (
+			m_month < f.fDate_range[0] ||	//test for lower than low range
+			m_month > f.fDate_range[1]		//test for higher than high range
+			)
+			return false;
+	}
+	return true;
 }

@@ -6,11 +6,13 @@
 #include "dataFunctions/m_container.h"
 #include "dataFunctions/calc_evaluating.h"
 #include "settings/settings.h"
+#include "dataFunctions/filter.h"
 #include "fileHandler/fh.h"
-#include "fileHandler/plainFileHandler/plainFH.h"
 
 #ifdef compileWithCrypt
 #include "fileHandler/cryptFileHandler/cryptFH.h"
+#else
+#include "fileHandler/plainFileHandler/plainFH.h"
 #endif
 
 int qtstart(int argc, char* argv[]) {
@@ -30,8 +32,12 @@ int main(int argc, char *argv[]) {
 	month->addTransaction(transaction::EXPENSE, 1, 50, { 2020, 3, 1 }, "");
 	month->addBudget(1, 75);
 
+	filter f;
+	f.enableFilter(filter::category);
+	f.selectCategory({1});
+	
 	const double balance = evaluateMonth::calcBalance(*month);
-	const double budget = evaluateMonth::calcCategory(*month, 1);
+	const double budget = evaluateMonth::calcFiltered(*month, f);
 	
 	if (balance != 50)
 		DebugBreak();
@@ -42,7 +48,6 @@ int main(int argc, char *argv[]) {
 	return 1;
 }
 
-//WORKING ON: TODO: Implement filter function
 //WORKING ON: TODO: Refactor, optimize and comment the existing backend
 //TODO: Implement data readout functions for gui integration
 //TODO: Create GUI with input options and graphic output options
