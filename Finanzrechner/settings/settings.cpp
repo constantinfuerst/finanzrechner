@@ -8,19 +8,19 @@ bool settings::addMonthly(const double& amount, const std::string& description, 
 	switch (type) {
 	case budget:
 		p = new transaction(
-			transaction::BUDGET, transaction::EXPENSE, id, category, amount, description
+			true, false, true, false, id, category, amount, description
 		);
 		m_budget.push_back(p);
 		return true;
 	case recurring:
 		p = new transaction(
-			transaction::TRANSACTION, transaction::EXPENSE, id, category, amount, description
+			false, true, true, false, id, category, amount, description
 		);
 		m_recurring.push_back(p);
 		return true;
 	case income:
 		p = new transaction(
-			transaction::TRANSACTION, transaction::INCOME, id, category, amount, description
+			false, true, false, true, id, category, amount, description
 		);
 		m_income.push_back(p);
 		return true;

@@ -5,19 +5,13 @@
 class transaction {
 public:
 	//DEFINITIONS
-	//ttypes
-	static const bool EXPENSE = false;
-	static const bool INCOME = true;
-	//booking types
-	static const bool BUDGET = false;
-	static const bool TRANSACTION = true;
 
 	//DATA
 	double m_amount;
-	bool m_bookingType;
-	bool m_tType;
 
 private:
+	bool m_budget, m_transaction, m_expense, m_income;
+	
 	double m_category;
 	QDate m_date;
 	std::string m_description;
@@ -25,10 +19,14 @@ private:
 public:
 	std::string m_transID;
 
+	bool isBudget() const { return m_budget; }
+	bool isTransaction() const { return m_transaction; }
+	bool isExpense() const { return m_expense; }
+	bool isIncome() const { return m_income; }
+	
 	//FUNCTIONS
 	//constructors
-	transaction(
-		const bool& bookingType, const bool& tType,
+	transaction(bool budget, bool transaction, bool expense, bool income,
 		std::string& transID, const double& category,
 		const double& amount, const std::string& description = "",
 		const QDate& date = QDate(1, 1, 1)

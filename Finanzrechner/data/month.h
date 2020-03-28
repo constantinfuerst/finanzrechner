@@ -24,7 +24,7 @@ private:
 
 	//FUNCTIONS
 	//helper functions
-	std::string generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction);
+	std::string generateID(const QDate& date, bool budget, bool transaction, bool expense, bool income);
 	static std::string getFileName(const QDate& i_month);
 
 public:
@@ -38,7 +38,7 @@ public:
 
 	//data manipulation
 	//these functions only accept either budget or transaction
-	void addTransaction(const bool& ttype, const double& category, const double& amount, const QDate& date, const std::string& description);
+	void addTransaction(bool expense, bool income, const double& category, const double& amount, const QDate& date, const std::string& description);
 	void addBudget(const double& category, const double& amount);
 
 	//"T" functions operate on both budget and transaction

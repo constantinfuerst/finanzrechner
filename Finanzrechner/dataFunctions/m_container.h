@@ -4,6 +4,7 @@
 #include "../data/transaction.h"
 #include "../data/month.h"
 #include "../fileHandler/fh.h"
+#include "filter.h"
 
 //container class used to organize and group all loaded months and their data
 class month_container {
@@ -21,5 +22,6 @@ public:
 	month_container(fileHandler* fh);
 	~month_container();
 	month* getMonth(const QDate& date);
+	void loadByFilter(filter* f);
 	bool removeLoadedMonth(const QDate& date);
 };

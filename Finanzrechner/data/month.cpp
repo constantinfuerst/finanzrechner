@@ -15,15 +15,16 @@ month::~month() {
 }
 
 //generate unique ID for identification in user interface
-std::string month::generateID(const QDate& date, const bool& expense_or_income, const bool& budget_or_transaction) {
+std::string month::generateID(const QDate& date, bool budget, bool transaction, bool expense, bool income) {
 	std::string num = std::to_string(m_idCounter);
 	while (num.size() < 16)
 		num = '0' + num;
 	std::string id = date.toString("MM-yyyy").toStdString();
 	id += "-";
-	id += (expense_or_income ? "1" : "0");
-	id += "-";
-	id += (budget_or_transaction ? "1" : "0");
+	id += (budget ? "1" : "0");
+	id += (transaction ? "1" : "0");
+	id += (expense ? "1" : "0");
+	id += (income ? "1" : "0");
 	id += "-";
 	id += num;
 	m_idCounter++;

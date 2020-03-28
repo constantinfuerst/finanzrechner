@@ -48,3 +48,15 @@ month* month_container::loadMonth_unguarded(const QDate& date) {
 	m_loaded_months.push_back(m);
 	return m;
 }
+
+//loads or generates skeleton for all months required/selected by a filter
+//may significantly impact memory usage depending on length of date range
+void month_container::loadByFilter(filter* f) {
+	if (!f->fEnabled[filter::date]) return;
+	auto dateLO = f->fDate_range[0];
+	
+	while (dateLO <= f->fDate_range[1]) {
+		getMonth(dateLO);
+		dateLO = dateLO.addMonths(1);
+	}
+}

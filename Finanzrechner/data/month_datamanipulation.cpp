@@ -3,14 +3,14 @@
 
 //creates a new transaction(transaction) from the supplied data
 //which is then pushed to the transaction storage
-void month::addTransaction(const bool& ttype, const double& category, const double& amount,
+void month::addTransaction(bool expense, bool income, const double& category, const double& amount,
 	const QDate& date, const std::string& description)
 {
 	modified = true;
-	std::string id = generateID(m_month, ttype, transaction::TRANSACTION);
+	std::string id = generateID(m_month, false, true, expense, income);
 	m_transactions.push_back(
 		new transaction(
-			transaction::TRANSACTION, ttype, id, category, amount, description, date
+			false, true, expense, income, id, category, amount, description, date
 		)
 	);
 }
@@ -19,10 +19,10 @@ void month::addTransaction(const bool& ttype, const double& category, const doub
 //which is then pushed to the transaction storage
 void month::addBudget(const double& category, const double& amount) {
 	modified = true;
-	std::string id = generateID(m_month, transaction::EXPENSE, transaction::BUDGET);
+	std::string id = generateID(m_month, true, false, true, false);
 	m_transactions.push_back(
 		new transaction(
-			transaction::BUDGET, transaction::EXPENSE, id, category, amount
+			true, false, true, false, id, category, amount
 		)
 	);
 }
@@ -49,12 +49,10 @@ bool month::removeT(const std::string& id) {
 //returns a transaction pointer from the t-storage for modification
 //may be budget or transaction
 transaction* month::modifyT(const std::string& id) {
-	for (int i = 0; i < m_transactions.size(); i++) {
-		auto* t = m_transactions[i];
+	for (auto* t : m_transactions)
 		if (t->m_transID == id) {
 			modified = true;
 			return t;
 		}
-	}
 	return nullptr;
 }

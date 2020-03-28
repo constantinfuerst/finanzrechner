@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dataFunctions\calc_evaluating.cpp" />
+    <ClCompile Include="dataFunctions\dataObtain.cpp" />
     <ClCompile Include="dataFunctions\m_container.cpp" />
     <ClCompile Include="data\month.cpp" />
     <ClCompile Include="data\month_datamanipulation.cpp" />
@@ -141,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dataFunctions\calc_evaluating.h" />
+    <ClInclude Include="dataFunctions\dataObtain.h" />
     <ClInclude Include="dataFunctions\filter.h" />
     <ClInclude Include="dataFunctions\m_container.h" />
     <ClInclude Include="data\month.h" />

@@ -70,6 +70,9 @@
     <ClCompile Include="fileHandler\cryptFileHandler\cfh_passwordUpdate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dataFunctions\dataObtain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -103,6 +106,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dataFunctions\filter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dataFunctions\dataObtain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -6,9 +6,9 @@ double evaluateMonth::calcBalance(const month& month) {
 	double month_balance = 0;
 	for (auto* t : month.m_transactions)
 		//only evaluate transactions (not budgets)
-		if (t->m_bookingType == transaction::TRANSACTION)
+		if (t->isTransaction())
 			//add or subtract depending on type
-			if (t->m_tType == transaction::EXPENSE)
+			if (t->isExpense())
 				month_balance -= t->m_amount;
 			else
 				month_balance += t->m_amount;
@@ -21,13 +21,13 @@ double evaluateMonth::calcFiltered(const month& month, const filter& f) {
 	for (auto* t : month.m_transactions)
 		if (*t == f) {
 			//transactions should affect budget variable
-			if (t->m_bookingType == transaction::TRANSACTION)
-				if (t->m_tType == transaction::EXPENSE)
+			if (t->isTransaction())
+				if (t->isExpense())
 					balance -= t->m_amount;
 				else
 					balance += t->m_amount;
 			//budget should affect budget only
-			if (t->m_bookingType == transaction::BUDGET)
+			if (t->isBudget())
 				budget += t->m_amount;
 		}
 	//returns only balance if budget nonexistent or filtered out
