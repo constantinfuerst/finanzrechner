@@ -45,8 +45,6 @@ private:
 	double m_current_balance;
 
 	//FUNCTIONS
-	std::string generateID(const monthly_type& type, const int& category);
-
 	//constructor / deconstructor
 	~settings();
 	settings(fileHandler* fh);

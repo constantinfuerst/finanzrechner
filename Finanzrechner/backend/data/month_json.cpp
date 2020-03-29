@@ -23,7 +23,6 @@ bool month::writeJSON() {
 	//initialize the json data and append transaction data
 	QJsonObject month;
 	month["date"] = m_month.toString("MM-yyyy");
-	month["idCounter"] = m_idCounter;
 	month["transactions"] = transactions;
 
 	//now create the document from the generated data and delegate the writing job
@@ -52,11 +51,6 @@ bool month::readJSON() {
 		for (auto e : transactionArray)
 			if (e.isObject())
 				m_transactions.push_back(new transaction(e.toObject()));
-	}
-	else return false;
-
-	if (json.contains("idCounter") && json["idCounter"].isDouble()) {
-		m_idCounter = json["idCounter"].toDouble();
 	}
 	else return false;
 

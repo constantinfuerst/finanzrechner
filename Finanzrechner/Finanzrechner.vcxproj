@@ -27,8 +27,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>v142</PlatformToolset>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <EnableUnitySupport>false</EnableUnitySupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -52,6 +54,7 @@
     <OutDir>$(SolutionDir)build\output\release\</OutDir>
     <IntDir>$(SolutionDir)build\intermediate\release\</IntDir>
     <TargetName>Finanzrechner</TargetName>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
@@ -112,57 +115,63 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
+      <EnablePREfast>true</EnablePREfast>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <OutputFile>$(OutDir)\$(ProjectName).exe</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="dataFunctions\calc_evaluating.cpp" />
-    <ClCompile Include="dataFunctions\dataObtain.cpp" />
-    <ClCompile Include="dataFunctions\m_container.cpp" />
-    <ClCompile Include="data\month.cpp" />
-    <ClCompile Include="data\month_datamanipulation.cpp" />
-    <ClCompile Include="data\month_json.cpp" />
-    <ClCompile Include="data\transaction.cpp" />
-    <ClCompile Include="fileHandler\cryptFileHandler\cfh_crypto.cpp" />
-    <ClCompile Include="fileHandler\cryptFileHandler\cfh_passwordUpdate.cpp" />
-    <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp" />
-    <ClCompile Include="fileHandler\plainFileHandler\plainFH.cpp" />
-    <ClCompile Include="finanzrechner.cpp" />
+    <ClCompile Include="backend\dataFunctions\calc_evaluating.cpp" />
+    <ClCompile Include="backend\dataFunctions\dataObtain.cpp" />
+    <ClCompile Include="backend\dataFunctions\m_container.cpp" />
+    <ClCompile Include="backend\data\month.cpp" />
+    <ClCompile Include="backend\data\month_datamanipulation.cpp" />
+    <ClCompile Include="backend\data\month_json.cpp" />
+    <ClCompile Include="backend\data\transaction.cpp" />
+    <ClCompile Include="backend\data\transaction_json.cpp" />
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cfh_crypto.cpp" />
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cfh_passwordUpdate.cpp" />
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cryptFH.cpp" />
+    <ClCompile Include="backend\fileHandler\plainFileHandler\plainFH.cpp" />
+    <ClCompile Include="backend\settings\monthly_transactions.cpp" />
+    <ClCompile Include="frontend\finanzrechner.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="settings\settings.cpp" />
-    <ClCompile Include="settings\settings_json.cpp" />
+    <ClCompile Include="backend\settings\settings.cpp" />
+    <ClCompile Include="backend\settings\settings_json.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="dataFunctions\calc_evaluating.h" />
-    <ClInclude Include="dataFunctions\dataObtain.h" />
-    <ClInclude Include="dataFunctions\filter.h" />
-    <ClInclude Include="dataFunctions\m_container.h" />
-    <ClInclude Include="data\month.h" />
-    <ClInclude Include="data\transaction.h" />
-    <ClInclude Include="fileHandler\cryptFileHandler\cryptFH.h" />
-    <ClInclude Include="fileHandler\fh.h" />
-    <ClInclude Include="fileHandler\plainFileHandler\plainFH.h" />
+    <ClInclude Include="backend\dataFunctions\calc_evaluating.h" />
+    <ClInclude Include="backend\dataFunctions\dataObtain.h" />
+    <ClInclude Include="backend\dataFunctions\filter.h" />
+    <ClInclude Include="backend\financeBackend.h" />
+    <ClInclude Include="backend\dataFunctions\m_container.h" />
+    <ClInclude Include="backend\data\month.h" />
+    <ClInclude Include="backend\data\transaction.h" />
+    <ClInclude Include="backend\fileHandler\cryptFileHandler\cryptFH.h" />
+    <ClInclude Include="backend\fileHandler\fh.h" />
+    <ClInclude Include="backend\fileHandler\plainFileHandler\plainFH.h" />
     <ClInclude Include="month\month.h" />
-    <QtMoc Include="finanzrechner.h" />
-    <ClInclude Include="settings\settings.h" />
+    <QtMoc Include="frontend\finanzrechner.h" />
+    <ClInclude Include="backend\settings\settings.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="finanzrechner.ui" />
+    <QtUic Include="frontend\finanzrechner.ui" />
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="finanzrechner.qrc" />
+    <QtRcc Include="frontend\finanzrechner.qrc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Finanzrechner.rc" />
+    <ResourceCompile Include="frontend\Finanzrechner.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

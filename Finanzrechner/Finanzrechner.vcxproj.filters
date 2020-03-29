@@ -31,46 +31,52 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="finanzrechner.cpp">
+    <ClCompile Include="backend\settings\settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="data\transaction.cpp">
+    <ClCompile Include="backend\settings\settings_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="data\month.cpp">
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cfh_crypto.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="data\month_json.cpp">
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cfh_passwordUpdate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="data\month_datamanipulation.cpp">
+    <ClCompile Include="backend\fileHandler\cryptFileHandler\cryptFH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dataFunctions\m_container.cpp">
+    <ClCompile Include="backend\fileHandler\plainFileHandler\plainFH.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="settings\settings.cpp">
+    <ClCompile Include="backend\dataFunctions\calc_evaluating.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dataFunctions\calc_evaluating.cpp">
+    <ClCompile Include="backend\dataFunctions\dataObtain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="settings\settings_json.cpp">
+    <ClCompile Include="backend\dataFunctions\m_container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fileHandler\plainFileHandler\plainFH.cpp">
+    <ClCompile Include="backend\data\month.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fileHandler\cryptFileHandler\cryptFH.cpp">
+    <ClCompile Include="backend\data\month_datamanipulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fileHandler\cryptFileHandler\cfh_crypto.cpp">
+    <ClCompile Include="backend\data\month_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fileHandler\cryptFileHandler\cfh_passwordUpdate.cpp">
+    <ClCompile Include="backend\data\transaction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dataFunctions\dataObtain.cpp">
+    <ClCompile Include="frontend\finanzrechner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\data\transaction_json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\settings\monthly_transactions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -81,53 +87,56 @@
     <ClInclude Include="month\month.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="data\transaction.h">
+    <ClInclude Include="backend\settings\settings.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="data\month.h">
+    <ClInclude Include="backend\financeBackend.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dataFunctions\m_container.h">
+    <ClInclude Include="backend\fileHandler\cryptFileHandler\cryptFH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="settings\settings.h">
+    <ClInclude Include="backend\fileHandler\plainFileHandler\plainFH.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dataFunctions\calc_evaluating.h">
+    <ClInclude Include="backend\fileHandler\fh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fileHandler\fh.h">
+    <ClInclude Include="backend\dataFunctions\calc_evaluating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fileHandler\plainFileHandler\plainFH.h">
+    <ClInclude Include="backend\dataFunctions\dataObtain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fileHandler\cryptFileHandler\cryptFH.h">
+    <ClInclude Include="backend\dataFunctions\filter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dataFunctions\filter.h">
+    <ClInclude Include="backend\dataFunctions\m_container.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dataFunctions\dataObtain.h">
+    <ClInclude Include="backend\data\month.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="backend\data\transaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="finanzrechner.h">
+    <QtMoc Include="frontend\finanzrechner.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="finanzrechner.ui">
-      <Filter>Form Files</Filter>
-    </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <QtRcc Include="finanzrechner.qrc">
+    <QtRcc Include="frontend\finanzrechner.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Finanzrechner.rc" />
+    <ResourceCompile Include="frontend\Finanzrechner.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtUic Include="frontend\finanzrechner.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
 </Project>

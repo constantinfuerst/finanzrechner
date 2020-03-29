@@ -13,10 +13,10 @@ private:
 	
 	month* m_currentMonth = nullptr;
 	month_container* m_mc = nullptr;
-	filter* m_f = nullptr;
+	const filter* m_f = nullptr;
 	
 public:
-	dataObtain(month_container* mc, filter* f);
+	dataObtain(month_container* mc, const filter* f);
 	//operation vulnerable to deletion of month or transaction data during runtime
 	//should be used with a while loop while taking care to not cause destruction or deletion
 	//of elements in the months or transactions in question

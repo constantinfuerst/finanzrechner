@@ -1,20 +1,6 @@
 #include "stdafx.h"
-#include "finanzrechner.h"
-
-#include "data/transaction.h"
-#include "data/month.h"
-#include "dataFunctions/m_container.h"
-#include "dataFunctions/calc_evaluating.h"
-#include "dataFunctions/filter.h"
-#include "dataFunctions/dataObtain.h"
-#include "settings/settings.h"
-#include "fileHandler/fh.h"
-
-#ifdef compileWithCrypt
-#include "fileHandler/cryptFileHandler/cryptFH.h"
-#else
-#include "fileHandler/plainFileHandler/plainFH.h"
-#endif
+#include "frontend/finanzrechner.h"
+#include "backend/financeBackend.h"
 
 int qtstart(int argc, char* argv[]) {
 	QApplication a(argc, argv);
@@ -23,42 +9,42 @@ int qtstart(int argc, char* argv[]) {
 	return a.exec();
 }
 
-void fillMonth(month_container* mc) {
-	auto* month = mc->getMonth({ 2020,3,1 });
-	month->addTransaction(false, true, 0, 100, { 2020, 3, 1 }, "m1t1");
-	month->addTransaction(true, false, 1, 50, { 2020, 3, 1 }, "m1t2");
-	month->addBudget(1, 75);
+const QDate february = { 2020, 2, 1 };
+const QDate march = { 2020, 3, 1 };
 
-	month = mc->getMonth({ 2020,2,1 });
-	month->addTransaction(false, true, 0, 100, { 2020, 3, 1 }, "m2t1");
-	month->addTransaction(true, false, 1, 50, { 2020, 3, 1 }, "m2t2");
-	month->addBudget(1, 75);
+void fillMonth(month_container* mc) {
+	auto* month = mc->getMonth(february);
+	month->addTransaction(transaction::makeExpense(1, 10, "ft1", february));
+	month->addTransaction(transaction::makeIncome(2, 100, "ft2", february));
+	month->addTransaction(transaction::makeBudget(1, 15));
+
+	month = mc->getMonth(march);
+	month->addTransaction(transaction::makeExpense(1, 10, "mt1", march));
+	month->addTransaction(transaction::makeIncome(2, 100, "mt2", march));
+	month->addTransaction(transaction::makeBudget(1, 15));
 }
 
 int main(int argc, char *argv[]) {
-	month_container mc(nullptr);
-	fillMonth(&mc);
+	auto* mc = new month_container(nullptr);
+	fillMonth(mc);
 
-	filter f;
-	f.enableFilter(filter::date);
-	f.enableFilter(filter::type);
-	f.selectDate({ 2020, 2, 1 }, { 2020, 3, 31 });
-	f.selectType(true, true, false, true);
+	auto* fIncome = new filter;
+	fIncome->enableFilter(filter::date);
+	fIncome->enableFilter(filter::type);
+	fIncome->selectDate(february, march);
+	fIncome->selectType(true, true, false, true);
 
-	double amount = 0;
+	auto* fBudget = new filter;
+	fBudget->enableFilter(filter::category);
+	fBudget->selectCategory({ 1 });
+
+	double income = evaluateMonth::calcFiltered(mc, fIncome);
+	double budget = evaluateMonth::calcFiltered(mc, fBudget);
 	
-	dataObtain data(&mc, &f);
-	transaction* t = data.getNext();
-	while (t != nullptr) {
-		if (t->isIncome())
-			amount += t->m_amount;
-		else
-			amount -= t->m_amount;
-		t = data.getNext();
-	}
-	
-	return 1;
+	DebugBreak();
+	return qtstart(argc, argv);
 }
 
-//TODO: find a way to make transaction constructor more intuitive and less prone to programmer error
+//WORKING ON: TODO: find any bugs, check for memory leaks and optimize backend as much as possible
+//WORKING ON: TODO: repair calcFiltered with budget
 //TODO: Create GUI with input options and graphic output options

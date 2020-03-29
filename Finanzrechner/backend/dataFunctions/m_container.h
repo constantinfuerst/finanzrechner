@@ -22,6 +22,6 @@ public:
 	month_container(fileHandler* fh);
 	~month_container();
 	month* getMonth(const QDate& date);
-	void loadByFilter(filter* f);
+	void loadByFilter(const filter* f);
 	bool removeLoadedMonth(const QDate& date);
 };

@@ -15,11 +15,15 @@ double evaluateMonth::calcBalance(const month& month) {
 	return month_balance;
 }
 
-double evaluateMonth::calcFiltered(const month& month, const filter& f) {
+double evaluateMonth::calcFiltered(month_container* mc, const filter* f) {
 	double budget = 0, balance = 0;
-	//loop every transaction
-	for (auto* t : month.m_transactions)
-		if (*t == f) {
+	mc->loadByFilter(f);
+	dataObtain data(mc, f);
+	transaction* t = data.getNext();
+	
+	//loop every matching transaction
+	while (t != nullptr) {
+		if (*t == *f) {
 			//transactions should affect budget variable
 			if (t->isTransaction())
 				if (t->isExpense())
@@ -30,6 +34,9 @@ double evaluateMonth::calcFiltered(const month& month, const filter& f) {
 			if (t->isBudget())
 				budget += t->m_amount;
 		}
+		t = data.getNext();
+	}
+	
 	//returns only balance if budget nonexistent or filtered out
 	if (budget == 0) return balance;
 	//returns only balance if balance exceeds budget

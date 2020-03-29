@@ -2,7 +2,7 @@
 
 #include "dataObtain.h"
 
-dataObtain::dataObtain(month_container* mc, filter* f) {
+dataObtain::dataObtain(month_container* mc, const filter* f) {
 	if (!f->fEnabled[filter::date]) return;
 	m_mc = mc;
 	m_f = f;

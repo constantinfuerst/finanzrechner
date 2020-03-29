@@ -20,11 +20,9 @@ private:
 	fileHandler* fh;
 	QDate m_month;
 	bool modified = false;
-	double m_idCounter = 0;
 
 	//FUNCTIONS
 	//helper functions
-	std::string generateID(const QDate& date, bool budget, bool transaction, bool expense, bool income);
 	static std::string getFileName(const QDate& i_month);
 
 public:
@@ -36,15 +34,10 @@ public:
 	bool readJSON();
 	bool writeJSON();
 
-	//data manipulation
-	//these functions only accept either budget or transaction
-	void addTransaction(bool expense, bool income, const double& category, const double& amount, const QDate& date, const std::string& description);
-	void addBudget(const double& category, const double& amount);
-
 	//"T" functions operate on both budget and transaction
-	void addT(transaction* transaction);
-	bool removeT(const std::string& id);
-	transaction* modifyT(const std::string& id);
+	void addTransaction(transaction* transaction);
+	bool removeTransaction(const std::string& id);
+	transaction* modifyTransaction(const std::string& id);
 
 	//data interaction
 	bool operator==(const QDate& date) const;
