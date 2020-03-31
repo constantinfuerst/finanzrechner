@@ -1,90 +1,55 @@
 #include "stdafx.h"
 #include "settings.h"
 
-
-
+//adds a monthly transaction of type budget, expense (recurring charges) or income (monthly earnings)
 bool settings::addMonthly(const double& amount, const std::string& description, const int& category, const monthly_type& type) {
 	modified = true;
 	transaction* p = nullptr;
+	
 	switch (type) {
 	case budget:
-		p = transaction::makeBudget(category, amount);
-		m_budget.push_back(p);
-		return true;
+		p = transaction::makeBudget(category, amount); break;
 	case recurring:
-		p = transaction::makeExpense(category, amount, description, { 1,1,1 });
-		m_recurring.push_back(p);
-		return true;
+		p = transaction::makeExpense(category, amount, description, { 1,1,1 }); break;
 	case income:
-		p = transaction::makeIncome(category, amount, description, { 1,1,1 });
-		m_income.push_back(p);
-		return true;
+		p = transaction::makeIncome(category, amount, description, { 1,1,1 }); break;
 	default: return false;
 	}
+
+	m_monthly.push_back(p);
 }
 
+//erases a monthly transaction from the settings pool, not removing it from past months
 bool settings::removeMonthly(const std::string& id) {
 	modified = true;
-	if (id[0] == '0')
-		for (auto i = 0; i < m_budget.size(); i++) {
-			auto* b = m_budget[i];
-			if (*b == id) {
-				delete b;
-				m_budget.erase(m_budget.begin() + i);
-				return true;
-			}
+
+	for (auto i = 0; i < m_monthly.size(); i++) {
+		auto* b = m_monthly[i];
+		if (*b == id) {
+			delete b;
+			m_monthly.erase(m_monthly.begin() + i);
+			return true;
 		}
-	else if (id[0] == '1')
-		for (auto i = 0; i < m_recurring.size(); i++) {
-			auto* b = m_recurring[i];
-			if (*b == id) {
-				delete b;
-				m_recurring.erase(m_recurring.begin() + i);
-				return true;
-			}
-		}
-	else if (id[0] == '2')
-		for (auto i = 0; i < m_income.size(); i++) {
-			auto* b = m_income[i];
-			if (*b == id) {
-				delete b;
-				m_income.erase(m_income.begin() + i);
-				return true;
-			}
-		}
-	else
-		return false;
+	}
+
 	return false;
 }
 
+//may edit monthly transactions, affecting only coming months still to be filled by fillMonth()
 transaction* settings::editMonthly(const std::string& id) {
 	modified = true;
-	if (id[0] == '0')
-		for (auto i = 0; i < m_budget.size(); i++) {
-			auto* b = m_budget[i];
-			if (*b == id) return b;
-		}
-
-	else if (id[0] == '1')
-		for (auto i = 0; i < m_recurring.size(); i++) {
-			auto* b = m_recurring[i];
-			if (*b == id) return b;
-		}
-	else if (id[0] == '2')
-		for (auto i = 0; i < m_income.size(); i++) {
-			auto* b = m_income[i];
-			if (*b == id) return b;
-		}
-	else
-		return nullptr;
+	
+	for (auto i = 0; i < m_monthly.size(); i++) {
+		auto* b = m_monthly[i];
+		if (*b == id) return b;
+	}
+	
 	return nullptr;
 }
 
+//adds all monthly transactions stored to a specified month
+//calling multiple times on the same month will result in duplicate transactions
 void settings::fillMonth(month* m) {
-	for (auto* r : m_recurring)
-		m->addTransaction(new transaction(*r));
-	for (auto* b : m_budget)
-		m->addTransaction(new transaction(*b));
-	for (auto* i : m_income)
-		m->addTransaction(new transaction(*i));
+	for (auto* t : m_monthly)
+		m->addTransaction(new transaction(*t));
 }

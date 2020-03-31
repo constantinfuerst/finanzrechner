@@ -19,13 +19,9 @@ settings::settings(fileHandler* fh_in) {
 settings::~settings() {
 	for (auto* e : m_categories)
 		delete e;
-	for (auto* e : m_income)
+	for (auto* e : m_monthly)
 		delete e;
-	for (auto* e : m_budget)
-		delete e;
-	for (auto* e : m_recurring)
-		delete e;
-	m_categories.clear(); m_income.clear(); m_budget.clear(); m_recurring.clear();
+	m_categories.clear(); m_monthly.clear();
 }
 
 void settings::clear() {
@@ -33,21 +29,22 @@ void settings::clear() {
 		writeJSON();
 	for (auto* e : m_categories)
 		delete e;
-	for (auto* e : m_income)
+	for (auto* e : m_monthly)
 		delete e;
-	for (auto* e : m_budget)
-		delete e;
-	for (auto* e : m_recurring)
-		delete e;
-	m_categories.clear(); m_income.clear(); m_budget.clear(); m_recurring.clear();
+	m_categories.clear(); m_monthly.clear();
 }
 
+//creates a new category with name and specified color supplied
+//category is ready to use system-wide (may be added to existing months by editing transactions)
 void settings::addCategory(const std::string& name, const QColor& color) {
 	modified = true;
 	m_categories.push_back(new category(m_catCounter, name, color));
 	m_catCounter++;
 }
 
+//deletes a category, does not however remove references to said category
+//this should be used carefully and a corrective statement in the ui of type "category missing"
+//should be implemented
 bool settings::removeCategory(const double& id) {
 	modified = true;
 	for (auto i = 0; i < m_categories.size(); i++) {
@@ -61,6 +58,8 @@ bool settings::removeCategory(const double& id) {
 	return false;
 }
 
+//allows editing a category by its id, editing the id is however not recommended
+//reasons for this are stated in the documentation for removeCategory
 settings::category* settings::editCategory(const double& id) {
 	modified = true;
 	for (auto i = 0; i < m_categories.size(); i++) {
@@ -70,11 +69,13 @@ settings::category* settings::editCategory(const double& id) {
 	return nullptr;
 }
 
+//adds to currently stored balance, amount may obviously be negative
 void settings::addToBalance(const double& amount) {
 	modified = true;
 	m_current_balance += amount;
 }
 
+//sets the current balance level, must be treated with caution, implement a warning in UI
 void settings::setBalance(const double& amount) {
 	modified = true;
 	m_current_balance = amount;

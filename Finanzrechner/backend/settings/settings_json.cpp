@@ -40,27 +40,11 @@ bool settings::readJSON() {
 	delete jdoc;
 
 	//check for valid json, set variables and return if encountering missing data
-	if (json.contains("monthly_income") && json["monthly_income"].isArray()) {
-		QJsonArray budgetArray = json["monthly_income"].toArray();
+	if (json.contains("monthly") && json["monthly"].isArray()) {
+		QJsonArray budgetArray = json["monthly"].toArray();
 		for (auto e : budgetArray)
 			if (e.isObject())
-				m_income.push_back(new transaction(e.toObject()));
-	}
-	else return false;
-
-	if (json.contains("monthly_budget") && json["monthly_budget"].isArray()) {
-		QJsonArray budgetArray = json["monthly_budget"].toArray();
-		for (auto e : budgetArray)
-			if (e.isObject())
-				m_budget.push_back(new transaction(e.toObject()));
-	}
-	else return false;
-
-	if (json.contains("monthly_recurring") && json["monthly_recurring"].isArray()) {
-		QJsonArray budgetArray = json["monthly_recurring"].toArray();
-		for (auto e : budgetArray)
-			if (e.isObject())
-				m_recurring.push_back(new transaction(e.toObject()));
+				m_monthly.push_back(new transaction(e.toObject()));
 	}
 	else return false;
 
@@ -100,34 +84,18 @@ bool settings::writeJSON() {
 		delete t;
 	} m_categories.clear();
 
-	QJsonArray income;
-	for (auto* t : m_income) {
+	QJsonArray mt;
+	for (auto* t : m_monthly) {
 		QJsonObject tobj = *t->toJSON();
-		income.append(tobj);
+		mt.append(tobj);
 		delete t;
-	} m_income.clear();
-
-	QJsonArray budget;
-	for (auto* t : m_budget) {
-		QJsonObject tobj = *t->toJSON();
-		budget.append(tobj);
-		delete t;
-	} m_budget.clear();
-
-	QJsonArray recurring;
-	for (auto* t : m_recurring) {
-		QJsonObject tobj = *t->toJSON();
-		recurring.append(tobj);
-		delete t;
-	} m_recurring.clear();
+	} m_monthly.clear();
 
 	//create the object and add data to it
 	QJsonObject settings;
 	settings["idCounter"] = m_idCounter;
 	settings["catCounter"] = m_catCounter;
-	settings["monthly_budget"] = budget;
-	settings["monthly_income"] = income;
-	settings["monthly_recurring"] = recurring;
+	settings["monthly"] = mt;
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 

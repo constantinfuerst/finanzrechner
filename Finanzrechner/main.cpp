@@ -30,11 +30,13 @@ int main(int argc, char *argv[]) {
 
 	auto* fIncome = new filter;
 	fIncome->enableFilter(filter::date);
-	fIncome->enableFilter(filter::type);
 	fIncome->selectDate(february, march);
+	fIncome->enableFilter(filter::type);
 	fIncome->selectType(true, true, false, true);
 
 	auto* fBudget = new filter;
+	fBudget->enableFilter(filter::date);
+	fBudget->selectDate(february, march);
 	fBudget->enableFilter(filter::category);
 	fBudget->selectCategory({ 1 });
 

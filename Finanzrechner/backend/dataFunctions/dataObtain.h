@@ -16,6 +16,8 @@ private:
 	const filter* m_f = nullptr;
 	
 public:
+	//filter must have "date" filtering enabled and correctly set
+	//in order to determine search space
 	dataObtain(month_container* mc, const filter* f);
 	//operation vulnerable to deletion of month or transaction data during runtime
 	//should be used with a while loop while taking care to not cause destruction or deletion

@@ -38,9 +38,7 @@ private:
 
 	fileHandler* fh = nullptr;
 
-	std::vector<transaction*> m_budget;
-	std::vector<transaction*> m_recurring;
-	std::vector<transaction*> m_income;
+	std::vector<transaction*> m_monthly;
 	std::vector<category*> m_categories;
 	double m_current_balance;
 

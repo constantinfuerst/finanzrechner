@@ -88,8 +88,17 @@ bool transaction::operator==(const filter& f) const {
 			return false;
 	}
 	if (f.fEnabled[filter::date]) {
-		if (m_date < f.fDate_range[0] || m_date > f.fDate_range[1])
-			return false;
+		//check that transaction is not budget as budgets have no correct date associated
+		if (f.fEnabled[filter::type]) {
+			if (!m_budget)
+				if (m_date < f.fDate_range[0] || m_date > f.fDate_range[1])
+					return false;
+		}
+		else {
+			if (m_date < f.fDate_range[0] || m_date > f.fDate_range[1])
+				return false;
+		}
+		
 	}
 	if (f.fEnabled[filter::category]) {
 		bool found = false;

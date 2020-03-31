@@ -11,6 +11,9 @@
 class evaluateMonth {
 	//FUNCTIONS
 public:
+	//uses a filter in conjunction with dataObtain to calculate selected values
+	//subject to same requirements as dataObtain
+	//meaning: filter must have valid and enabled date filtering
 	static double calcFiltered(month_container* mc, const filter* f);
 	static double calcBalance(const month& month);
 };
