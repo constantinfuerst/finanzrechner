@@ -28,7 +28,7 @@ public:
 	enum filterType {
 		type, amount, date, category, description
 	};
-	//element types: 0 = expense, 1 = income, 2 = budget, 3 = transaction
+	//element types: 0 = expense, 1 = income, 2 = budget, 3 = transaction, 4 = recurring
 
 //PLEASE TREAT THESE MEMBERS AS READ ONLY
 	//ENABLED FILTERS
@@ -36,7 +36,7 @@ public:
 	std::array<bool, 5> fEnabled = { false };
 	//FILTER DATA
 	//uses index defined by comment on LINE 10 to select match of type if true
-	std::array<bool, 4> fTypes_selected = { false };
+	std::array<bool, 5> fTypes_selected = { false };
 	//index 0 -> low range, index 1 -> high range, for single value set i0=i1
 	std::array<double, 2> fAmount_range = { 0 };
 	std::array<QDate, 2> fDate_range;
@@ -51,7 +51,7 @@ public:
 	inline void disableFilter(filterType ft);
 
 	//filter data manipulation
-	inline void selectType(bool expense, bool income, bool budget, bool transaction);
+	inline void selectType(bool expense, bool income, bool budget, bool transaction, bool recurring);
 	inline void selectAmount(const double& low, const double& high);
 	inline void selectDate(const QDate& low, const QDate& high);
 	inline void selectCategory(const std::vector<double>& categories);
@@ -66,8 +66,8 @@ inline void filter::disableFilter(filterType ft) {
 	fEnabled[ft] = false;
 }
 
-inline void filter::selectType(bool expense, bool income, bool budget, bool transaction) {
-	fTypes_selected[0] = expense; fTypes_selected[1] = income; fTypes_selected[2] = budget; fTypes_selected[3] = transaction;
+inline void filter::selectType(bool expense, bool income, bool budget, bool transaction, bool recurring) {
+	fTypes_selected[0] = expense; fTypes_selected[1] = income; fTypes_selected[2] = budget; fTypes_selected[3] = transaction; fTypes_selected[4] = recurring;
 }
 
 inline void filter::selectAmount(const double& low, const double& high) {

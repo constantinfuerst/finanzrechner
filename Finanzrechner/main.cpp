@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	fIncome->enableFilter(filter::date);
 	fIncome->selectDate(february, march);
 	fIncome->enableFilter(filter::type);
-	fIncome->selectType(true, true, false, true);
+	fIncome->selectType(true, true, false, true, false);
 
 	auto* fBudget = new filter;
 	fBudget->enableFilter(filter::date);
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]) {
 	fBudget->enableFilter(filter::category);
 	fBudget->selectCategory({ 1 });
 
-	double income = evaluateMonth::calcFiltered(mc, fIncome);
-	double budget = evaluateMonth::calcFiltered(mc, fBudget);
+	const double income = evaluateMonth::calcFiltered(mc, fIncome);
+	const double budget = evaluateMonth::calcFiltered(mc, fBudget);
 	
 	DebugBreak();
 	return qtstart(argc, argv);

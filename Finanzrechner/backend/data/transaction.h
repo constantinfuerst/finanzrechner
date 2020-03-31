@@ -10,7 +10,7 @@ public:
 	double m_amount;
 
 private:
-	bool m_budget, m_transaction, m_expense, m_income;
+	bool m_budget, m_transaction, m_expense, m_income, m_recurring;
 	
 	double m_category;
 	QDate m_date;
@@ -23,7 +23,7 @@ private:
 	
 	//constructors
 	transaction(bool budget, bool transaction, bool expense, bool income, const double& category,
-		const double& amount, const std::string& description = "",
+		const double& amount, bool recurring, const std::string& description = "",
 		const QDate& date = QDate(1, 1, 1), const std::string& id = ""
 	);
 	
@@ -33,11 +33,11 @@ public:
 
 	static transaction* makeIncome(
 		const double& category, const double& amount,
-		const std::string& description, const QDate& date);
+		const std::string& description, const QDate& date, bool recurring = false);
 
 	static transaction* makeExpense(
 		const double& category, const double& amount,
-		const std::string& description, const QDate& date);
+		const std::string& description, const QDate& date, bool recurring = false);
 	
 	transaction(const QJsonObject& json);
 	transaction(const transaction& t);

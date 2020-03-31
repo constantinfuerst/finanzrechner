@@ -17,6 +17,7 @@ bool settings::addMonthly(const double& amount, const std::string& description, 
 	}
 
 	m_monthly.push_back(p);
+	return true;
 }
 
 //erases a monthly transaction from the settings pool, not removing it from past months

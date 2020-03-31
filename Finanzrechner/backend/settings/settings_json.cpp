@@ -2,7 +2,7 @@
 #include "settings.h"
 
 //deserializes a category for use in the settings json deserializer
-settings::category* settings::category::fromJSON(const QJsonObject& json) const {
+settings::category* settings::category::fromJSON(const QJsonObject& json) {
 	QColor color; std::string name; int id = 0;
 
 	if (json.contains("id") && json["id"].isDouble())
@@ -20,7 +20,7 @@ QJsonObject* settings::category::toJSON() const {
 	int color_r, color_g, color_b, color_a;
 	category_color.getRgb(&color_r, &color_g, &color_b, &color_a);
 	auto* json = new QJsonObject;
-	(*json)["id"] = (double)identifier;
+	(*json)["id"] = static_cast<double>(identifier);
 	(*json)["name"] = QString::fromStdString(category_name);
 	(*json)["color"] = QJsonArray({ static_cast<double>(color_r), static_cast<double>(color_b), static_cast<double>(color_g), static_cast<double>(color_a) });
 	return json;
@@ -100,7 +100,7 @@ bool settings::writeJSON() {
 	settings["current_balance"] = m_current_balance;
 
 	//call the write of fileHandler with "savedir" macro and appending 'settings'
-	std::string fname = std::string(savedir) + "settings";
+	const std::string fname = std::string(savedir) + "settings";
 	auto* jdoc = new QJsonDocument(settings);
 	fh->writeJSON(jdoc, fname);
 	delete jdoc;

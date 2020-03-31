@@ -22,7 +22,7 @@ public:
 		category(const double& id, const std::string& name, const QColor& color);
 		category(const QJsonObject& json);
 		bool operator==(const double& id) const;
-		category* fromJSON(const QJsonObject& json) const;
+		static category* fromJSON(const QJsonObject& json);
 		QJsonObject* toJSON() const;
 	};
 	enum monthly_type {
