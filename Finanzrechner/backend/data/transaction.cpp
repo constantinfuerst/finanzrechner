@@ -31,12 +31,12 @@ transaction::transaction(const QJsonObject& json) {
 std::string transaction::generateID(const QDate& date, bool budget, bool transaction, bool expense, bool income) {
 	static int idc = 0;
 	std::string num = std::to_string(idc);
-	const QDateTime cdate = QDateTime::currentDateTimeUtc();
-	while (num.size() < 2)
+	const QDate cdate = QDate::currentDate();
+	while (num.size() < 4)
 		num = '0' + num;
 	std::string id = date.toString("MM-yyyy").toStdString();
 	id += "-";
-	id += cdate.toString("ss-mm-hh-dd-MM-yyyy").toStdString();
+	id += cdate.toString("dd-MM-yyyy").toStdString();
 	id += "-";
 	id += (budget ? "1" : "0");
 	id += (transaction ? "1" : "0");
@@ -48,7 +48,7 @@ std::string transaction::generateID(const QDate& date, bool budget, bool transac
 	return id;
 }
 
-transaction::transaction(const transaction& t) {
+transaction::transaction(const transaction& t, const QDate& month) {
 	m_recurring = t.m_recurring;
 	m_amount = t.m_amount;
 	m_budget = t.m_budget;
@@ -56,9 +56,9 @@ transaction::transaction(const transaction& t) {
 	m_expense = t.m_expense;
 	m_income = t.m_income;
 	m_category = t.m_category;
-	m_date = t.m_date;
+	m_date = month;
 	m_description = t.m_description;
-	m_transID = t.m_transID;
+	m_transID = generateID(month, m_budget, m_transaction, m_expense, m_income);
 }
 
 //compares id, returns true if equal

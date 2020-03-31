@@ -16,9 +16,10 @@ class month {
 public:
 	//DATA
 	std::vector<transaction*> m_transactions;
+	QDate m_month;
+	
 private:
 	fileHandler* fh;
-	QDate m_month;
 	bool modified = false;
 
 	//FUNCTIONS

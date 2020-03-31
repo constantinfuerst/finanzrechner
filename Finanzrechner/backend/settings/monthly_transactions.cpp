@@ -52,5 +52,5 @@ transaction* settings::editMonthly(const std::string& id) {
 //calling multiple times on the same month will result in duplicate transactions
 void settings::fillMonth(month* m) {
 	for (auto* t : m_monthly)
-		m->addTransaction(new transaction(*t));
+		m->addTransaction(new transaction(*t, m->m_month));
 }

@@ -40,7 +40,7 @@ public:
 		const std::string& description, const QDate& date, bool recurring = false);
 	
 	transaction(const QJsonObject& json);
-	transaction(const transaction& t);
+	transaction(const transaction& t, const QDate& month);
 
 	//information obtain
 	bool isBudget() const { return m_budget; }

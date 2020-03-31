@@ -48,5 +48,4 @@ int main(int argc, char *argv[]) {
 }
 
 //WORKING ON: TODO: find any bugs, check for memory leaks and optimize backend as much as possible
-//WORKING ON: TODO: repair calcFiltered with budget
 //TODO: Create GUI with input options and graphic output options
