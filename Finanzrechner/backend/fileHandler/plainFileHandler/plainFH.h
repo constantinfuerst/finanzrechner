@@ -8,7 +8,7 @@
 /// then replace any cryptoFileHandler specific actions and replace the definition
 /////////
 
-class plainFileHandler : public fileHandler {
+class plainFileHandler final : public fileHandler {
 public:
 	~plainFileHandler() override = default;
 	bool writeJSON(QJsonDocument* jdoc, const std::string& fname) override;

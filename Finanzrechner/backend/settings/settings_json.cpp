@@ -3,7 +3,7 @@
 
 //deserializes a category for use in the settings json deserializer
 settings::category* settings::category::fromJSON(const QJsonObject& json) {
-	QColor color; std::string name; int id = 0;
+	QColor color; std::string name; double id = 0;
 
 	if (json.contains("id") && json["id"].isDouble())
 		id = json["id"].toDouble();
@@ -30,34 +30,34 @@ QJsonObject* settings::category::toJSON() const {
 //reads all data into the settings singleton
 bool settings::readJSON() {
 	//return if fileHandler nonexistent
-	if (fh == nullptr) return false;
-	const std::string fname = std::string(savedir) + "settings";
+	if (m_fh == nullptr) return false;
+	const std::string fname = std::string(SAVEDIR) + "settings";
 
 	//obtain json document from filename and return if reading fails
-	auto* jdoc = fh->readJSON(fname);
+	auto* jdoc = m_fh->readJSON(fname);
 	if (jdoc == nullptr) return false;
 	auto json = jdoc->object();
 	delete jdoc;
 
 	//check for valid json, set variables and return if encountering missing data
 	if (json.contains("monthly") && json["monthly"].isArray()) {
-		QJsonArray budgetArray = json["monthly"].toArray();
-		for (auto e : budgetArray)
+		QJsonArray budget_array = json["monthly"].toArray();
+		for (auto e : budget_array)
 			if (e.isObject())
 				m_monthly.push_back(new transaction(e.toObject()));
 	}
 	else return false;
 
 	if (json.contains("categories") && json["categories"].isArray()) {
-		QJsonArray budgetArray = json["categories"].toArray();
-		for (auto e : budgetArray)
+		QJsonArray budget_array = json["categories"].toArray();
+		for (auto e : budget_array)
 			if (e.isObject())
 				m_categories.push_back(new category(e.toObject()));
 	}
 	else return false;
 
 	if (json.contains("idCounter") && json["idCounter"].isDouble())
-		m_idCounter = json["idCounter"].toDouble();
+		m_id_counter = json["idCounter"].toDouble();
 	else return false;
 
 	if (json.contains("current_balance") && json["current_balance"].isDouble())
@@ -65,7 +65,7 @@ bool settings::readJSON() {
 	else return false;
 
 	if (json.contains("catCounter") && json["catCounter"].isDouble())
-		m_catCounter = json["catCounter"].toDouble();
+		m_cat_counter = json["catCounter"].toDouble();
 	else return false;
 
 	return true;
@@ -75,34 +75,34 @@ bool settings::readJSON() {
 //delegating the write to the fileHandler function
 bool settings::writeJSON() {
 	//return if fileHandler nonexistent
-	if (fh == nullptr) return false;
+	if (m_fh == nullptr) return false;
 	//write transaction data into json arrays
 	QJsonArray categories;
 	for (auto* t : m_categories) {
-		QJsonObject tobj = *t->toJSON();
+		auto tobj = *t->toJSON();
 		categories.append(tobj);
 		delete t;
 	} m_categories.clear();
 
 	QJsonArray mt;
 	for (auto* t : m_monthly) {
-		QJsonObject tobj = *t->toJSON();
+		auto tobj = *t->toJSON();
 		mt.append(tobj);
 		delete t;
 	} m_monthly.clear();
 
 	//create the object and add data to it
 	QJsonObject settings;
-	settings["idCounter"] = m_idCounter;
-	settings["catCounter"] = m_catCounter;
+	settings["idCounter"] = m_id_counter;
+	settings["catCounter"] = m_cat_counter;
 	settings["monthly"] = mt;
 	settings["categories"] = categories;
 	settings["current_balance"] = m_current_balance;
 
-	//call the write of fileHandler with "savedir" macro and appending 'settings'
-	const std::string fname = std::string(savedir) + "settings";
+	//call the write of fileHandler with "SAVEDIR" macro and appending 'settings'
+	const std::string fname = std::string(SAVEDIR) + "settings";
 	auto* jdoc = new QJsonDocument(settings);
-	fh->writeJSON(jdoc, fname);
+	m_fh->writeJSON(jdoc, fname);
 	delete jdoc;
 
 	return true;

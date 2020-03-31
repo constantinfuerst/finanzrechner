@@ -127,7 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="backend\dataFunctions\calc_evaluating.cpp" />
-    <ClCompile Include="backend\dataFunctions\dataObtain.cpp" />
+    <ClCompile Include="backend\dataFunctions\data_obtain.cpp" />
     <ClCompile Include="backend\dataFunctions\m_container.cpp" />
     <ClCompile Include="backend\data\month.cpp" />
     <ClCompile Include="backend\data\month_datamanipulation.cpp" />
@@ -139,7 +139,7 @@
     <ClCompile Include="backend\fileHandler\cryptFileHandler\cryptFH.cpp" />
     <ClCompile Include="backend\fileHandler\plainFileHandler\plainFH.cpp" />
     <ClCompile Include="backend\settings\monthly_transactions.cpp" />
-    <ClCompile Include="frontend\finanzrechner.cpp" />
+    <ClCompile Include="frontend\financecalc.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="backend\settings\settings.cpp" />
     <ClCompile Include="backend\settings\settings_json.cpp" />
@@ -150,7 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backend\dataFunctions\calc_evaluating.h" />
-    <ClInclude Include="backend\dataFunctions\dataObtain.h" />
+    <ClInclude Include="backend\dataFunctions\data_obtain.h" />
     <ClInclude Include="backend\dataFunctions\filter.h" />
     <ClInclude Include="backend\financeBackend.h" />
     <ClInclude Include="backend\dataFunctions\m_container.h" />
@@ -160,7 +160,7 @@
     <ClInclude Include="backend\fileHandler\fh.h" />
     <ClInclude Include="backend\fileHandler\plainFileHandler\plainFH.h" />
     <ClInclude Include="month\month.h" />
-    <QtMoc Include="frontend\finanzrechner.h" />
+    <QtMoc Include="frontend\financecalc.h" />
     <ClInclude Include="backend\settings\settings.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

@@ -9,18 +9,18 @@
  * month year type1 type2(bool: budget (true) OR transaction (false)) counter
  * mmyyyyttcccccccc
  *
- * every modifying function shall always update the "modified" status to true, indicating a save to the json file is necessary
+ * every modifying function shall always update the "m_modified" status to true, indicating a save to the json file is necessary
  */
 
 class month {
 public:
 	//DATA
-	std::vector<transaction*> m_transactions;
-	QDate m_month;
+	std::vector<transaction*> p_transactions;
+	QDate p_month;
 	
 private:
-	fileHandler* fh;
-	bool modified = false;
+	fileHandler* m_fh;
+	bool m_modified = false;
 
 	//FUNCTIONS
 	//helper functions
@@ -28,7 +28,7 @@ private:
 
 public:
 	//constructors
-	month(const QDate& monthDate, fileHandler* fh);
+	month(const QDate& month_date, fileHandler* fh_in);
 	~month();
 
 	//json serialization / deserialization

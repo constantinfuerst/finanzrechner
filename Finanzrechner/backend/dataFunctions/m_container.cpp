@@ -1,8 +1,8 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "m_container.h"
 
 month_container::month_container(fileHandler* fh_in) {
-	fh = fh_in;
+	m_fh = fh_in;
 }
 
 month_container::~month_container() {
@@ -29,7 +29,7 @@ month* month_container::findLoadedMonth(const QDate& date) {
 //unloads a month from vector
 //will trigger the months writing function through destructor
 bool month_container::removeLoadedMonth(const QDate& date) {
-	for (int i = 0; i < m_loaded_months.size(); i++) {
+	for (auto i = 0; i < m_loaded_months.size(); i++) {
 		auto* m = m_loaded_months[i];
 		if (*m == date) {
 			delete m;
@@ -43,7 +43,7 @@ bool month_container::removeLoadedMonth(const QDate& date) {
 //loads a month into vector without checking for it already being loaded
 //should be called after findLoadedMonth returns nullptr
 month* month_container::loadMonth_unguarded(const QDate& date) {
-	auto* m = new month(date, fh);
+	auto* m = new month(date, m_fh);
 	m->readJSON();
 	m_loaded_months.push_back(m);
 	return m;
@@ -52,11 +52,11 @@ month* month_container::loadMonth_unguarded(const QDate& date) {
 //loads or generates skeleton for all months required/selected by a filter
 //may significantly impact memory usage depending on length of date range
 void month_container::loadByFilter(const filter* f) {
-	if (!f->fEnabled[filter::date]) return;
-	auto dateLO = f->fDate_range[0];
+	if (!f->f_enabled[filter::date]) return;
+	auto date_lo = f->f_date_range[0];
 	
-	while (dateLO <= f->fDate_range[1]) {
-		getMonth(dateLO);
-		dateLO = dateLO.addMonths(1);
+	while (date_lo <= f->f_date_range[1]) {
+		getMonth(date_lo);
+		date_lo = date_lo.addMonths(1);
 	}
 }

@@ -4,7 +4,7 @@
 //reads transaction information out of a supplied json object
 transaction* transaction::fromJSON(const QJsonObject& json) const {
 	bool bud = false, trans = false, exp = false, inc = false, rec = false;
-	std::string transID, description;
+	std::string trans_id, description;
 	double category = 0, amount = 0;
 	QDate date;
 
@@ -22,7 +22,7 @@ transaction* transaction::fromJSON(const QJsonObject& json) const {
 	if (json.contains("amount") && json["amount"].isDouble())
 		amount = json["amount"].toDouble();
 	if (json.contains("id") && json["id"].isString())
-		transID = json["id"].toString().toStdString();
+		trans_id = json["id"].toString().toStdString();
 	if (json.contains("date") && json["date"].isString())
 		date = QDate::fromString(json["date"].toString());
 	if (json.contains("description") && json["description"].isString())
@@ -30,18 +30,18 @@ transaction* transaction::fromJSON(const QJsonObject& json) const {
 	if (json.contains("recurring") && json["recurring"].isBool())
 		rec = json["recurring"].toBool();
 
-	return new transaction(bud, trans, exp, inc, category, amount, rec, description, date, transID);
+	return new transaction(bud, trans, exp, inc, category, amount, rec, description, date, trans_id);
 }
 
 //constructs a json object out of transaction data
 QJsonObject* transaction::toJSON() const {
 	auto* json = new QJsonObject;
-	(*json)["id"] = QString::fromStdString(m_transID);
+	(*json)["id"] = QString::fromStdString(m_trans_id);
 	(*json)["bud"] = m_budget;
 	(*json)["trans"] = m_transaction;
 	(*json)["exp"] = m_expense;
 	(*json)["inc"] = m_income;
-	(*json)["amount"] = m_amount;
+	(*json)["amount"] = p_amount;
 	(*json)["category"] = m_category;
 	(*json)["date"] = m_date.toString("dd-MM-yyyy");
 	(*json)["description"] = QString::fromStdString(m_description);

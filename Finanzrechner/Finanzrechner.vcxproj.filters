@@ -52,9 +52,6 @@
     <ClCompile Include="backend\dataFunctions\calc_evaluating.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="backend\dataFunctions\dataObtain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="backend\dataFunctions\m_container.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,13 +67,16 @@
     <ClCompile Include="backend\data\transaction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="frontend\finanzrechner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="backend\data\transaction_json.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="backend\settings\monthly_transactions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="backend\dataFunctions\data_obtain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="frontend\financecalc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -105,9 +105,6 @@
     <ClInclude Include="backend\dataFunctions\calc_evaluating.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="backend\dataFunctions\dataObtain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="backend\dataFunctions\filter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -120,11 +117,9 @@
     <ClInclude Include="backend\data\transaction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <QtMoc Include="frontend\finanzrechner.h">
+    <ClInclude Include="backend\dataFunctions\data_obtain.h">
       <Filter>Header Files</Filter>
-    </QtMoc>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="frontend\finanzrechner.qrc">
@@ -138,5 +133,10 @@
     <QtUic Include="frontend\finanzrechner.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="frontend\financecalc.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>

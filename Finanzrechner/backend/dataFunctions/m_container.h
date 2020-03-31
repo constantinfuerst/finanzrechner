@@ -10,7 +10,7 @@
 class month_container {
 	//DATA
 	std::vector<month*> m_loaded_months;
-	fileHandler* fh;
+	fileHandler* m_fh;
 
 	//FUNCTIONS
 	month* findLoadedMonth(const QDate& date);
@@ -19,7 +19,7 @@ class month_container {
 	month* loadMonth_unguarded(const QDate& date);
 
 public:
-	month_container(fileHandler* fh);
+	month_container(fileHandler* fh_in);
 	~month_container();
 	month* getMonth(const QDate& date);
 	void loadByFilter(const filter* f);

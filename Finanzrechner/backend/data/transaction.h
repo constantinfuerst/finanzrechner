@@ -7,7 +7,7 @@ public:
 	//DEFINITIONS
 
 	//DATA
-	double m_amount;
+	double p_amount;
 
 private:
 	bool m_budget, m_transaction, m_expense, m_income, m_recurring;
@@ -15,7 +15,7 @@ private:
 	double m_category;
 	QDate m_date;
 	std::string m_description;
-	std::string m_transID;
+	std::string m_trans_id;
 
 	//FUNCTIONS
 	//helper
@@ -43,14 +43,14 @@ public:
 	transaction(const transaction& t, const QDate& month);
 
 	//information obtain
-	bool isBudget() const { return m_budget; }
-	bool isTransaction() const { return m_transaction; }
-	bool isExpense() const { return m_expense; }
-	bool isIncome() const { return m_income; }
+	[[nodiscard]] const bool& isBudget() const { return m_budget; }
+	[[nodiscard]] const bool& isTransaction() const { return m_transaction; }
+	[[nodiscard]] const bool& isExpense() const { return m_expense; }
+	[[nodiscard]] const bool& isIncome() const { return m_income; }
 	
 	//json serializers / deserializers
-	transaction* fromJSON(const QJsonObject& json) const;
-	QJsonObject* toJSON() const;
+	[[nodiscard]] transaction* fromJSON(const QJsonObject& json) const;
+	[[nodiscard]] QJsonObject* toJSON() const;
 
 	//comparisons
 	bool operator==(const std::string& id) const;

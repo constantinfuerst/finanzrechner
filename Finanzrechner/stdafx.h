@@ -10,11 +10,11 @@
 #include <array>
 #include <filesystem>
 
-#define stringreserve 2000
-#define savedir "C:\\Users\\Admin\\Desktop\\financecalc\\"
-#define compileWithCrypt
+constexpr int STRINGRESERVE = 2000;
+constexpr char SAVEDIR[] = "C:\\Users\\Admin\\Desktop\\financecalc\\";
+#define COMPILE_WITH_CRYPT
 
-#ifdef compileWithCrypt
+#ifdef COMPILE_WITH_CRYPT
 	#ifdef DEBUG
 		#pragma comment(lib, "C:\\Projects\\LIBRARIES\\crypto-cpp\\x64\\Output\\Debug\\cryptlib.lib")
 	#else

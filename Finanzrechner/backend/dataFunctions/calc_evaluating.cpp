@@ -1,38 +1,40 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "calc_evaluating.h"
 
-double evaluateMonth::calcBalance(const month& month) {
+double evaluate_month::calcBalance(const month& month) {
 	//loop every transaction
 	double month_balance = 0;
-	for (auto* t : month.m_transactions)
+	for (auto* t : month.p_transactions)
 		//only evaluate transactions (not budgets)
-		if (t->isTransaction())
+		if (t->isTransaction()) {
 			//add or subtract depending on type
 			if (t->isExpense())
-				month_balance -= t->m_amount;
+				month_balance -= t->p_amount;
 			else
-				month_balance += t->m_amount;
+				month_balance += t->p_amount;
+		}
 	return month_balance;
 }
 
-double evaluateMonth::calcFiltered(month_container* mc, const filter* f) {
+double evaluate_month::calcFiltered(month_container* mc, const filter* f) {
 	double budget = 0, balance = 0;
 	mc->loadByFilter(f);
-	dataObtain data(mc, f);
-	transaction* t = data.getNext();
+	data_obtain data(mc, f);
+	auto* t = data.getNext();
 	
 	//loop every matching transaction
 	while (t != nullptr) {
 		if (*t == *f) {
 			//transactions should affect budget variable
-			if (t->isTransaction())
+			if (t->isTransaction()) {
 				if (t->isExpense())
-					balance -= t->m_amount;
+					balance -= t->p_amount;
 				else
-					balance += t->m_amount;
+					balance += t->p_amount;
+			}
 			//budget should affect budget only
 			if (t->isBudget())
-				budget += t->m_amount;
+				budget += t->p_amount;
 		}
 		t = data.getNext();
 	}

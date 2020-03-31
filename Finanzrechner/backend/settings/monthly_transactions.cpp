@@ -1,9 +1,9 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "settings.h"
 
 //adds a monthly transaction of type budget, expense (recurring charges) or income (monthly earnings)
 bool settings::addMonthly(const double& amount, const std::string& description, const int& category, const monthly_type& type) {
-	modified = true;
+	m_modified = true;
 	transaction* p = nullptr;
 	
 	switch (type) {
@@ -22,7 +22,7 @@ bool settings::addMonthly(const double& amount, const std::string& description, 
 
 //erases a monthly transaction from the settings pool, not removing it from past months
 bool settings::removeMonthly(const std::string& id) {
-	modified = true;
+	m_modified = true;
 
 	for (auto i = 0; i < m_monthly.size(); i++) {
 		auto* b = m_monthly[i];
@@ -38,13 +38,9 @@ bool settings::removeMonthly(const std::string& id) {
 
 //may edit monthly transactions, affecting only coming months still to be filled by fillMonth()
 transaction* settings::editMonthly(const std::string& id) {
-	modified = true;
-	
-	for (auto i = 0; i < m_monthly.size(); i++) {
-		auto* b = m_monthly[i];
-		if (*b == id) return b;
-	}
-	
+	m_modified = true;
+	for (auto t : m_monthly)
+		if (*t == id) return t;
 	return nullptr;
 }
 
@@ -52,5 +48,5 @@ transaction* settings::editMonthly(const std::string& id) {
 //calling multiple times on the same month will result in duplicate transactions
 void settings::fillMonth(month* m) {
 	for (auto* t : m_monthly)
-		m->addTransaction(new transaction(*t, m->m_month));
+		m->addTransaction(new transaction(*t, m->p_month));
 }

@@ -1,51 +1,55 @@
-#include "stdafx.h"
-#include "frontend/finanzrechner.h"
+#include <stdafx.h>
+
+#include "frontend/financecalc.h"
 #include "backend/financeBackend.h"
 
 int qtstart(int argc, char* argv[]) {
 	QApplication a(argc, argv);
-	Finanzrechner w;
+	financecalc w;
 	w.show();
 	return a.exec();
 }
 
-const QDate february = { 2020, 2, 1 };
-const QDate march = { 2020, 3, 1 };
+const QDate FEBRUARY = { 2020, 2, 1 };
+const QDate MARCH = { 2020, 3, 1 };
 
 void fillMonth(month_container* mc) {
-	auto* month = mc->getMonth(february);
-	month->addTransaction(transaction::makeExpense(1, 10, "ft1", february));
-	month->addTransaction(transaction::makeIncome(2, 100, "ft2", february));
+	auto* month = mc->getMonth(FEBRUARY);
+	month->addTransaction(transaction::makeExpense(1, 10, "ft1", FEBRUARY));
+	month->addTransaction(transaction::makeIncome(2, 100, "ft2", FEBRUARY));
 	month->addTransaction(transaction::makeBudget(1, 15));
 
-	month = mc->getMonth(march);
-	month->addTransaction(transaction::makeExpense(1, 10, "mt1", march));
-	month->addTransaction(transaction::makeIncome(2, 100, "mt2", march));
+	month = mc->getMonth(MARCH);
+	month->addTransaction(transaction::makeExpense(1, 10, "mt1", MARCH));
+	month->addTransaction(transaction::makeIncome(2, 100, "mt2", MARCH));
 	month->addTransaction(transaction::makeBudget(1, 15));
 }
 
-int main(int argc, char *argv[]) {
+void testBackend() {
 	auto* mc = new month_container(nullptr);
 	fillMonth(mc);
 
-	auto* fIncome = new filter;
-	fIncome->enableFilter(filter::date);
-	fIncome->selectDate(february, march);
-	fIncome->enableFilter(filter::type);
-	fIncome->selectType(true, true, false, true, false);
+	auto* f_income = new filter;
+	f_income->enableFilter(filter::date);
+	f_income->selectDate(FEBRUARY, MARCH);
+	f_income->enableFilter(filter::type);
+	f_income->selectType(true, true, false, true, false);
 
-	auto* fBudget = new filter;
-	fBudget->enableFilter(filter::date);
-	fBudget->selectDate(february, march);
-	fBudget->enableFilter(filter::category);
-	fBudget->selectCategory({ 1 });
+	auto* f_budget = new filter;
+	f_budget->enableFilter(filter::date);
+	f_budget->selectDate(FEBRUARY, MARCH);
+	f_budget->enableFilter(filter::category);
+	f_budget->selectCategory({ 1 });
 
-	const double income = evaluateMonth::calcFiltered(mc, fIncome);
-	const double budget = evaluateMonth::calcFiltered(mc, fBudget);
-	
+	const double income = evaluate_month::calcFiltered(mc, f_income);
+	const double budget = evaluate_month::calcFiltered(mc, f_budget);
+
 	DebugBreak();
+}
+
+int main(int argc, char *argv[]) {
+	testBackend();
 	return qtstart(argc, argv);
 }
 
-//WORKING ON: TODO: find any bugs, check for memory leaks and optimize backend as much as possible
 //TODO: Create GUI with input options and graphic output options
