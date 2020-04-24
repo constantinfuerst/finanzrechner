@@ -31,6 +31,7 @@
     <CharacterSet>Unicode</CharacterSet>
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
     <EnableUnitySupport>false</EnableUnitySupport>
+    <SpectreMitigation>Spectre</SpectreMitigation>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -49,6 +50,7 @@
     <OutDir>$(SolutionDir)build\output\debug\</OutDir>
     <IntDir>$(SolutionDir)build\intermediate\debug\</IntDir>
     <TargetName>Finanzrechner</TargetName>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)build\output\release\</OutDir>
@@ -87,6 +89,8 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>C:\Projects\LIBRARIES;$(Qt_INCLUDEPATH_);%(AdditionalIncludeDirectories);$(ProjectDir)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>QT_QML_DEBUG;%(PreprocessorDefinitions);DEBUG</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -116,6 +120,10 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <EnablePREfast>true</EnablePREfast>
+      <SDLCheck>true</SDLCheck>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+      <StringPooling>true</StringPooling>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -139,7 +147,7 @@
     <ClCompile Include="backend\fileHandler\cryptFileHandler\cryptFH.cpp" />
     <ClCompile Include="backend\fileHandler\plainFileHandler\plainFH.cpp" />
     <ClCompile Include="backend\settings\monthly_transactions.cpp" />
-    <ClCompile Include="frontend\financecalc.cpp" />
+    <ClCompile Include="backend\testing.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="backend\settings\settings.cpp" />
     <ClCompile Include="backend\settings\settings_json.cpp" />
@@ -160,7 +168,6 @@
     <ClInclude Include="backend\fileHandler\fh.h" />
     <ClInclude Include="backend\fileHandler\plainFileHandler\plainFH.h" />
     <ClInclude Include="month\month.h" />
-    <QtMoc Include="frontend\financecalc.h" />
     <ClInclude Include="backend\settings\settings.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
@@ -172,6 +179,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="frontend\Finanzrechner.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="frontend\qml\main.qml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

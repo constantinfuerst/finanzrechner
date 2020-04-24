@@ -76,7 +76,7 @@
     <ClCompile Include="backend\dataFunctions\data_obtain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="frontend\financecalc.cpp">
+    <ClCompile Include="backend\testing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -135,8 +135,6 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="frontend\financecalc.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
+    <None Include="frontend\qml\main.qml" />
   </ItemGroup>
 </Project>

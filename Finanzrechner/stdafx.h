@@ -1,6 +1,6 @@
 #pragma once
 
-#include <QtWidgets>
+#include <QtQuick>
 #include <QtCore>
 #include <QDateTime>
 

@@ -15,3 +15,5 @@
 #else
 #include "fileHandler/plainFileHandler/plainFH.h"
 #endif
+
+void testBackend();
